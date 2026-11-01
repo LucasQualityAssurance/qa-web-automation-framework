@@ -1,4 +1,4 @@
-﻿package utils;
+package utils;
 
 /**
  * Centralizes project-wide configuration values, such as the base URL under test.

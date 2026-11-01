@@ -1,7 +1,7 @@
 package base;
 
 import factory.DriverFactory;
-import utils.ConfigReader;
+import pages.HomePage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
@@ -12,11 +12,12 @@ import org.openqa.selenium.WebDriver;
 public abstract class BaseTest {
 
     protected WebDriver driver;
+    protected HomePage homePage;
 
     @BeforeEach
     public void setUp() {
         driver = DriverFactory.createDriver();
-        driver.get(ConfigReader.getBaseUrl());
+        homePage = new HomePage(driver).open();
     }
 
     @AfterEach
