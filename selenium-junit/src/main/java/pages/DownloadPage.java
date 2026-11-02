@@ -2,29 +2,26 @@ package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.ConfigReader;
 
-import java.io.File;
-import java.time.Duration;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.Instant;
 
 /**
  * Represents the File Downloader page (https://the-internet.herokuapp.com/download),
  * which lists every file available for download.
+ * <p>
+ * Besides files uploaded by anyone, the site always ships a fixed set of files that are
+ * never removed nor overwritten (sample.pdf, sample.csv, sample.json, some-file.txt and
+ * textfile.txt), so tests should download one of those to stay deterministic.
  */
-public class DownloadPage {
+public class DownloadPage extends BasePage {
 
-    private final WebDriver driver;
-    private final WebDriverWait wait;
-
-    private final By fileLinks = By.cssSelector("#content a");
+    private final By listaDeArquivos = By.cssSelector("#content a");
 
     public DownloadPage(WebDriver driver) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        super(driver);
     }
 
     /**
@@ -32,48 +29,40 @@ public class DownloadPage {
      *
      * @return this page, to allow fluent chaining.
      */
-    public DownloadPage open() {
-        driver.get(ConfigReader.getBaseUrl() + "/download");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(fileLinks));
+    public DownloadPage abrir() {
+        navegarPara("/download", listaDeArquivos);
         return this;
     }
 
     /**
-     * Clicks the first available file link and waits until the download finishes
-     * (Chrome is configured to save it directly into {@link ConfigReader#getDownloadDirectory()}
-     * without a save dialog).
+     * Clicks the link of the given file and waits until Chrome finishes saving it into
+     * {@link ConfigReader#getDiretorioDownload()} (no save dialog is shown).
      *
-     * @return the name of the downloaded file.
+     * @param nomeArquivo name of the file, exactly as listed on the page (e.g. "some-file.txt").
+     * @return the path of the downloaded file.
      */
-    public String baixarPrimeiroArquivo() {
-        List<WebElement> links = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(fileLinks));
-        WebElement primeiroLink = links.get(0);
-
-        String href = primeiroLink.getAttribute("href");
-        String nomeArquivo = href.substring(href.lastIndexOf('/') + 1);
-
-        primeiroLink.click();
-        aguardarDownloadConcluido(nomeArquivo);
-
-        return nomeArquivo;
+    public Path baixarArquivo(String nomeArquivo) {
+        aguardarVisivel(listaDeArquivos);
+        clicar(By.cssSelector("#content a[href='download/" + nomeArquivo + "']"));
+        return aguardarDownloadConcluido(nomeArquivo);
     }
 
-    private void aguardarDownloadConcluido(String nomeArquivo) {
-        File arquivoFinal = new File(ConfigReader.getDownloadDirectory(), nomeArquivo);
-        File arquivoParcial = new File(arquivoFinal.getPath() + ".crdownload");
+    private Path aguardarDownloadConcluido(String nomeArquivo) {
+        Path arquivoFinal = ConfigReader.getDiretorioDownload().resolve(nomeArquivo);
+        Path arquivoParcial = ConfigReader.getDiretorioDownload().resolve(nomeArquivo + ".crdownload");
 
-        long limiteDeTempo = System.currentTimeMillis() + Duration.ofSeconds(20).toMillis();
-        while (System.currentTimeMillis() < limiteDeTempo) {
-            if (arquivoFinal.exists() && !arquivoParcial.exists()) {
-                return;
+        Instant limite = Instant.now().plus(ConfigReader.getTempoEsperaDownload());
+        while (Instant.now().isBefore(limite)) {
+            if (Files.exists(arquivoFinal) && !Files.exists(arquivoParcial)) {
+                return arquivoFinal;
             }
             try {
                 Thread.sleep(250);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
-                throw new RuntimeException(e);
+                throw new IllegalStateException(e);
             }
         }
-        throw new IllegalStateException("Download do arquivo '" + nomeArquivo + "' não foi concluído a tempo.");
+        throw new IllegalStateException("Download do arquivo '" + nomeArquivo + "' nao foi concluido a tempo.");
     }
 }

@@ -2,29 +2,20 @@ package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import utils.ConfigReader;
-
-import java.time.Duration;
 
 /**
  * Represents the login page of https://the-internet.herokuapp.com/login.
  * Responsible for filling in credentials and submitting the authentication form.
  */
-public class LoginPage {
+public class LoginPage extends BasePage {
 
-    private final WebDriver driver;
-    private final WebDriverWait wait;
-
-    private final By username = By.id("username");
-    private final By password = By.id("password");
-    private final By submitButton = By.cssSelector("button[type='submit']");
-    private final By errorMessage = By.id("flash");
+    private final By campoUsuario = By.id("username");
+    private final By campoSenha = By.id("password");
+    private final By botaoEntrar = By.cssSelector("button[type='submit']");
+    private final By mensagemDeErro = By.id("flash");
 
     public LoginPage(WebDriver driver) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        super(driver);
     }
 
     /**
@@ -32,22 +23,18 @@ public class LoginPage {
      *
      * @return this page, to allow fluent chaining.
      */
-    public LoginPage open() {
-        driver.get(ConfigReader.getBaseUrl() + "/login");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(username));
+    public LoginPage abrir() {
+        navegarPara("/login", campoUsuario);
         return this;
     }
 
     /**
-     * Fills in the credentials and submits the login form, waiting for each
-     * field/button to become visible before interacting with it.
+     * Fills in valid credentials and submits the login form.
      *
-     * @param user the username to authenticate with.
-     * @param pass the password to authenticate with.
      * @return the {@link SecurePage} the user is redirected to after a successful login.
      */
-    public SecurePage login(String user, String pass) {
-        submitForm(user, pass);
+    public SecurePage fazerLogin(String usuario, String senha) {
+        enviarFormulario(usuario, senha);
         return new SecurePage(driver);
     }
 
@@ -56,45 +43,23 @@ public class LoginPage {
      * staying on the login page. Use this for negative scenarios where authentication is
      * expected to fail and the error message needs to be captured.
      *
-     * @param user the username to authenticate with (may be blank).
-     * @param pass the password to authenticate with (may be blank).
      * @return this page, to allow fluent chaining.
      */
-    public LoginPage attemptLogin(String user, String pass) {
-        submitForm(user, pass);
+    public LoginPage tentarLogin(String usuario, String senha) {
+        enviarFormulario(usuario, senha);
         return this;
     }
 
     /**
      * Reads the error message displayed on the login page after a failed authentication attempt.
-     *
-     * @return the error message text.
      */
-    public String getErrorMessage() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(errorMessage)).getText();
+    public String obterMensagemDeErro() {
+        return obterTexto(mensagemDeErro);
     }
 
-    /**
-     * Waits for Chrome's automatic translation to replace the error message with the
-     * Portuguese version before reading it, since the page content is served only in English.
-     *
-     * @return the (translated) error message text.
-     */
-    public String getTranslatedErrorMessage() {
-        WebDriverWait translationWait = new WebDriverWait(driver, Duration.ofSeconds(15));
-        return translationWait.until(driver -> {
-            try {
-                String text = driver.findElement(errorMessage).getText();
-                return text.toLowerCase().contains("inválid") ? text : null;
-            } catch (org.openqa.selenium.WebDriverException e) {
-                return null;
-            }
-        });
-    }
-
-    private void submitForm(String user, String pass) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(username)).sendKeys(user);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(password)).sendKeys(pass);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(submitButton)).click();
+    private void enviarFormulario(String usuario, String senha) {
+        escrever(campoUsuario, usuario);
+        escrever(campoSenha, senha);
+        clicar(botaoEntrar);
     }
 }

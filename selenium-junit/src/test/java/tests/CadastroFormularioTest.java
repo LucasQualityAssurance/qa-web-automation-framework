@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * Starting from the home page, the user opens the Large Form example and fills in every
  * field on the screen (account data, details, multi-select languages, contact preference
  * radio, interests checkboxes, experience slider and favorite color picker), submits it,
- * and confirms the "Formulário enviado" (translated) confirmation message.
+ * and confirms the "Form Submitted" confirmation heading.
  */
 public class CadastroFormularioTest extends BaseTest {
 
@@ -22,10 +22,10 @@ public class CadastroFormularioTest extends BaseTest {
     @DisplayName("Deve preencher e enviar o formulario grande com sucesso")
     public void devePreencherEEnviarFormularioComSucesso() {
         TestLogger.step("Abrindo a home page (/)");
-        homePage.open();
+        homePage.abrir();
 
         TestLogger.step("Clicando no link 'Large Form'");
-        LargeFormPage largeFormPage = homePage.goToLargeForm();
+        LargeFormPage largeFormPage = homePage.acessarFormularioGrande();
 
         TestLogger.step("Preenchendo dados da conta (nome, sobrenome, email, senha, apelido)");
         TestLogger.step("Preenchendo dados de detalhes (aniversario, idade, pais, sobre voce)");
@@ -61,8 +61,8 @@ public class CadastroFormularioTest extends BaseTest {
         TestLogger.step("Enviando o formulario");
         FormResultPage formResultPage = largeFormPage.enviar();
 
-        TestLogger.step("Validando mensagem de confirmacao (traduzida para PT)");
-        assertEquals("Formulário enviado", formResultPage.getTranslatedHeadingText());
+        TestLogger.step("Validando mensagem de confirmacao");
+        assertEquals("Form Submitted", formResultPage.obterTitulo());
 
         TestLogger.step("Formulario enviado com sucesso");
     }

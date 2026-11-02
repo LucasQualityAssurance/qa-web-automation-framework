@@ -2,31 +2,24 @@ package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import utils.ConfigReader;
-
-import java.time.Duration;
-import java.util.List;
 
 /**
  * Represents the home page of https://the-internet.herokuapp.com/.
  * Every test must land on this page before exercising any other flow, since all
  * the available scenarios are reachable from here. It is the pre-requisite
  * starting point for any tester running the automation.
+ * <p>
+ * Example links are located by their href, which is more stable than the visible text.
  */
-public class HomePage {
+public class HomePage extends BasePage {
 
-    private final WebDriver driver;
-    private final WebDriverWait wait;
-
-    private final By heading = By.tagName("h1");
-    private final By availableExamples = By.cssSelector("ul li a");
+    private final By titulo = By.tagName("h1");
+    private final By linkFormularioGrande = By.cssSelector("a[href='/large_form']");
+    private final By linkDownloadDeArquivos = By.cssSelector("a[href='/download']");
+    private final By linkUploadDeArquivos = By.cssSelector("a[href='/upload']");
 
     public HomePage(WebDriver driver) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        super(driver);
     }
 
     /**
@@ -35,78 +28,27 @@ public class HomePage {
      *
      * @return this page, to allow fluent chaining.
      */
-    public HomePage open() {
-        driver.get(ConfigReader.getBaseUrl());
-        wait.until(ExpectedConditions.visibilityOfElementLocated(heading));
+    public HomePage abrir() {
+        navegarPara("/", titulo);
         return this;
     }
 
-    public boolean isLoaded() {
-        return driver.getCurrentUrl().startsWith(ConfigReader.getBaseUrl())
-                && driver.findElement(heading).isDisplayed();
+    public String obterTitulo() {
+        return obterTexto(titulo);
     }
 
-    public String getHeadingText() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(heading)).getText();
-    }
-
-    /**
-     * Waits for Chrome's automatic translation to replace the heading with the
-     * Portuguese version before reading it, since the page content is served only in English.
-     *
-     * @return the (translated) heading text.
-     */
-    public String getTranslatedHeadingText() {
-        WebDriverWait translationWait = new WebDriverWait(driver, Duration.ofSeconds(15));
-        return translationWait.until(driver -> {
-            String text = driver.findElement(heading).getText();
-            return text.toLowerCase().contains("bem-vindo") ? text : null;
-        });
-    }
-
-    public List<WebElement> getAvailableExamples() {
-        return driver.findElements(availableExamples);
-    }
-
-    /**
-     * Clicks the example link that matches the given visible text (e.g. "Form Authentication").
-     *
-     * @param linkText visible text of the example link.
-     */
-    public void goToExample(String linkText) {
-        driver.findElement(By.linkText(linkText)).click();
-    }
-
-    /**
-     * Navigates to the Large Form example. Locates the link by its href instead of its
-     * visible text, since the visible text changes once Chrome auto-translates the page.
-     *
-     * @return the {@link LargeFormPage} the user is redirected to.
-     */
-    public LargeFormPage goToLargeForm() {
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("a[href='/large_form']"))).click();
+    public LargeFormPage acessarFormularioGrande() {
+        clicar(linkFormularioGrande);
         return new LargeFormPage(driver);
     }
 
-    /**
-     * Navigates to the File Download example. Locates the link by its href instead of its
-     * visible text, since the visible text changes once Chrome auto-translates the page.
-     *
-     * @return the {@link DownloadPage} the user is redirected to.
-     */
-    public DownloadPage goToFileDownload() {
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("a[href='/download']"))).click();
+    public DownloadPage acessarDownloadDeArquivos() {
+        clicar(linkDownloadDeArquivos);
         return new DownloadPage(driver);
     }
 
-    /**
-     * Navigates to the File Upload example. Locates the link by its href instead of its
-     * visible text, since the visible text changes once Chrome auto-translates the page.
-     *
-     * @return the {@link UploadPage} the user is redirected to.
-     */
-    public UploadPage goToFileUpload() {
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("a[href='/upload']"))).click();
+    public UploadPage acessarUploadDeArquivos() {
+        clicar(linkUploadDeArquivos);
         return new UploadPage(driver);
     }
 }

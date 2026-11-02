@@ -1,12 +1,12 @@
 package base;
 
 import factory.DriverFactory;
-import pages.HomePage;
-import pages.LoginPage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 import org.openqa.selenium.WebDriver;
+import pages.HomePage;
+import pages.LoginPage;
 import utils.TestLogger;
 
 /**
@@ -21,7 +21,7 @@ public abstract class BaseTest {
     @BeforeEach
     public void setUp(TestInfo testInfo) {
         TestLogger.step("Iniciando teste: " + testInfo.getDisplayName());
-        driver = DriverFactory.createDriver();
+        driver = DriverFactory.criarDriver();
         homePage = new HomePage(driver);
         loginPage = new LoginPage(driver);
     }
