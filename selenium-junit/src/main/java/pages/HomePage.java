@@ -3,8 +3,11 @@ package pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.ConfigReader;
 
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -16,21 +19,25 @@ import java.util.List;
 public class HomePage {
 
     private final WebDriver driver;
+    private final WebDriverWait wait;
 
     private final By heading = By.tagName("h1");
     private final By availableExamples = By.cssSelector("ul li a");
 
     public HomePage(WebDriver driver) {
         this.driver = driver;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
     /**
-     * Navigates to the home page, making sure every automation starts from a known state.
+     * Navigates to the home page, waiting until the heading is visible so every
+     * automation starts from a known, fully-loaded state.
      *
      * @return this page, to allow fluent chaining.
      */
     public HomePage open() {
         driver.get(ConfigReader.getBaseUrl());
+        wait.until(ExpectedConditions.visibilityOfElementLocated(heading));
         return this;
     }
 
@@ -40,7 +47,21 @@ public class HomePage {
     }
 
     public String getHeadingText() {
-        return driver.findElement(heading).getText();
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(heading)).getText();
+    }
+
+    /**
+     * Waits for Chrome's automatic translation to replace the heading with the
+     * Portuguese version before reading it, since the page content is served only in English.
+     *
+     * @return the (translated) heading text.
+     */
+    public String getTranslatedHeadingText() {
+        WebDriverWait translationWait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        return translationWait.until(driver -> {
+            String text = driver.findElement(heading).getText();
+            return text.toLowerCase().contains("bem-vindo") ? text : null;
+        });
     }
 
     public List<WebElement> getAvailableExamples() {
