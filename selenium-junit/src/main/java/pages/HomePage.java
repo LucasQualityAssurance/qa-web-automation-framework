@@ -76,4 +76,15 @@ public class HomePage {
     public void goToExample(String linkText) {
         driver.findElement(By.linkText(linkText)).click();
     }
+
+    /**
+     * Navigates to the Large Form example. Locates the link by its href instead of its
+     * visible text, since the visible text changes once Chrome auto-translates the page.
+     *
+     * @return the {@link LargeFormPage} the user is redirected to.
+     */
+    public LargeFormPage goToLargeForm() {
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("a[href='/large_form']"))).click();
+        return new LargeFormPage(driver);
+    }
 }
