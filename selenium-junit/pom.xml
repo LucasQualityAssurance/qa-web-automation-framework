@@ -13,43 +13,19 @@
     <name>selenium-junit</name>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <!-- Run without opening the browser window: mvn test -Dheadless=true -->
+        <headless>false</headless>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!-- Overrides to fix transitive vulnerable dependencies pulled in by selenium-java -->
+            <!-- Override to fix a transitive vulnerable dependency pulled in by selenium-java -->
             <dependency>
                 <groupId>io.opentelemetry</groupId>
                 <artifactId>opentelemetry-api</artifactId>
                 <version>1.67.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-core</artifactId>
-                <version>2.22.4</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>2.22.4</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents.client5</groupId>
-                <artifactId>httpclient5</artifactId>
-                <version>5.6.5</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents.core5</groupId>
-                <artifactId>httpcore5</artifactId>
-                <version>5.4.4</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents.core5</groupId>
-                <artifactId>httpcore5-h2</artifactId>
-                <version>5.4.4</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -69,12 +45,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>io.github.bonigarcia</groupId>
-            <artifactId>webdrivermanager</artifactId>
-            <version>6.3.2</version>
-        </dependency>
-
         <!-- Allure desabilitado por hora; Descomentar quando for usar relatorios Allure.
         <dependency>
             <groupId>io.qameta.allure</groupId>
@@ -83,13 +53,21 @@
         </dependency>
         -->
 
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.42</version>
-            <scope>provided</scope>
-        </dependency>
-
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.2</version>
+                <configuration>
+                    <systemPropertyVariables>
+                        <headless>${headless}</headless>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
