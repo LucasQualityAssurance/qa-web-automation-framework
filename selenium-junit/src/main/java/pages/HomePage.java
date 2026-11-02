@@ -87,4 +87,26 @@ public class HomePage {
         wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("a[href='/large_form']"))).click();
         return new LargeFormPage(driver);
     }
+
+    /**
+     * Navigates to the File Download example. Locates the link by its href instead of its
+     * visible text, since the visible text changes once Chrome auto-translates the page.
+     *
+     * @return the {@link DownloadPage} the user is redirected to.
+     */
+    public DownloadPage goToFileDownload() {
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("a[href='/download']"))).click();
+        return new DownloadPage(driver);
+    }
+
+    /**
+     * Navigates to the File Upload example. Locates the link by its href instead of its
+     * visible text, since the visible text changes once Chrome auto-translates the page.
+     *
+     * @return the {@link UploadPage} the user is redirected to.
+     */
+    public UploadPage goToFileUpload() {
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("a[href='/upload']"))).click();
+        return new UploadPage(driver);
+    }
 }
