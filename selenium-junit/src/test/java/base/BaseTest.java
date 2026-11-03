@@ -2,11 +2,13 @@ package base;
 
 import factory.DriverFactory;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 import org.openqa.selenium.WebDriver;
 import pages.HomePage;
 import pages.LoginPage;
+import utils.AllureAmbiente;
 import utils.TestLogger;
 
 /**
@@ -17,6 +19,11 @@ public abstract class BaseTest {
     protected WebDriver driver;
     protected HomePage homePage;
     protected LoginPage loginPage;
+
+    @BeforeAll
+    public static void registrarAmbienteNoAllure() {
+        AllureAmbiente.registrar();
+    }
 
     @BeforeEach
     public void setUp(TestInfo testInfo) {

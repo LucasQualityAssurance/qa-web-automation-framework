@@ -37,3 +37,6 @@ Files/
 
 # Local tool settings
 .claude/
+
+# Allure tool downloaded by the allure-maven plugin
+.allure/

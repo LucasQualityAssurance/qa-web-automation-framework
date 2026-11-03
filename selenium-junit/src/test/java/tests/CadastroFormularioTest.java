@@ -1,6 +1,7 @@
 package tests;
 
 import base.BaseTest;
+import io.qameta.allure.Feature;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.FormResultPage;
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * radio, interests checkboxes, experience slider and favorite color picker), submits it,
  * and confirms the "Form Submitted" confirmation heading.
  */
+@Feature("Formulario")
 public class CadastroFormularioTest extends BaseTest {
 
     @Test

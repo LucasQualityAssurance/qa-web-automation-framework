@@ -12,6 +12,7 @@ Web UI test automation framework built with **Java 21**, **Selenium 4** and **JU
 | Selenium 4 | Browser automation (driver resolved automatically by Selenium Manager) |
 | JUnit 5 | Test runner, including parameterized tests |
 | Maven | Build and dependency management |
+| Allure Report | Test report with steps, grouped by feature |
 
 ## Project structure
 
@@ -58,6 +59,17 @@ mvn test -Dtest=LoginTest
 ```
 
 Each test prints its steps to the terminal with the `[STEP]` prefix.
+
+## Allure report
+
+```bash
+mvn clean test       # runs the tests and writes the results into target/allure-results
+mvn allure:serve     # builds the report and opens it in the browser
+```
+
+No Allure installation is needed: the Maven plugin downloads the Allure tool on first use.
+The report shows every `[STEP]` as a step of the test, groups the tests by feature
+(`@Feature`: Login, Formulario, Download e Upload) and lists the environment the tests ran on.
 
 ### Downloaded files
 
