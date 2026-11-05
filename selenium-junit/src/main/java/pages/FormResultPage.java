@@ -4,7 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 /**
- * Represents the result page shown after submitting the Large Form
+ * Representa a página de resultado exibida após o envio do Large Form
  * (https://the-internet.herokuapp.com/large_form).
  */
 public class FormResultPage extends BasePage {

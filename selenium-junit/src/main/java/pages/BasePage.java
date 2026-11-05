@@ -8,8 +8,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import utils.ConfigReader;
 
 /**
- * Base class for every page object: holds the WebDriver, a default explicit wait and
- * the common interactions (navigate, wait for visibility, click, type and read text).
+ * Classe base de todos os page objects: guarda o WebDriver, uma espera explícita padrão e
+ * as interações comuns (navegar, aguardar visibilidade, clicar, digitar e ler texto).
  */
 public abstract class BasePage {
 
@@ -22,10 +22,10 @@ public abstract class BasePage {
     }
 
     /**
-     * Navigates to a path of the site under test and waits until the given element is visible.
+     * Navega para um caminho do site sob teste e aguarda até que o elemento informado esteja visível.
      *
-     * @param caminho          path relative to the base URL (e.g. "/login").
-     * @param elementoDeCarga  element that indicates the page has finished loading.
+     * @param caminho          caminho relativo à URL base (ex.: "/login").
+     * @param elementoDeCarga  elemento que indica que a página terminou de carregar.
      */
     protected void navegarPara(String caminho, By elementoDeCarga) {
         driver.get(ConfigReader.getBaseUrl() + caminho);

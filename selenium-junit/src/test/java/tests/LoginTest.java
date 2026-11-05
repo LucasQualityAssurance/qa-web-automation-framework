@@ -12,10 +12,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Validates the form authentication flow at https://the-internet.herokuapp.com/login.
- * The site does not redirect automatically to the home page after a successful login,
- * so this test manually navigates to the home page afterwards and confirms the
- * "Welcome to the-internet" heading is displayed, closing out the login flow.
+ * Valida o fluxo de autenticação por formulário em https://the-internet.herokuapp.com/login.
+ * O site não redireciona automaticamente para a página inicial após um login bem-sucedido,
+ * então este teste navega manualmente para a página inicial em seguida e confirma que o
+ * título "Welcome to the-internet" é exibido, encerrando o fluxo de login.
  */
 @Feature("Login")
 public class LoginTest extends BaseTest {

@@ -5,8 +5,8 @@ import java.nio.file.Path;
 import java.time.Duration;
 
 /**
- * Centralizes project-wide configuration values, such as the base URL under test,
- * the downloads directory and the default wait timeouts.
+ * Centraliza as configurações do projeto, como a URL base sob teste, o diretório de
+ * downloads e os tempos de espera padrão.
  */
 public final class ConfigReader {
 
@@ -24,14 +24,14 @@ public final class ConfigReader {
     }
 
     /**
-     * Directory where Chrome is configured to automatically save downloaded files: the
-     * {@code Files} folder at the repository root. It is resolved from the location of the
-     * compiled classes, so it works on any machine and regardless of the working directory
-     * the tests are started from (IntelliJ or Maven).
+     * Diretório onde o Chrome está configurado para salvar automaticamente os arquivos baixados:
+     * a pasta {@code Files} na raiz do repositório. Ele é resolvido a partir do local das classes
+     * compiladas, então funciona em qualquer máquina e independe do diretório de trabalho de onde
+     * os testes são iniciados (IntelliJ ou Maven).
      * <p>
-     * Can be overridden with {@code -DdiretorioDownload=<path>}.
+     * Pode ser sobrescrito com {@code -DdiretorioDownload=<caminho>}.
      *
-     * @return the absolute path of the downloads directory.
+     * @return o caminho absoluto do diretório de downloads.
      */
     public static Path getDiretorioDownload() {
         String sobrescrito = System.getProperty("diretorioDownload");
@@ -42,7 +42,7 @@ public final class ConfigReader {
     }
 
     /**
-     * Whether Chrome should run without opening a window. Enabled with {@code -Dheadless=true}.
+     * Indica se o Chrome deve rodar sem abrir janela. Ativado com {@code -Dheadless=true}.
      */
     public static boolean isHeadless() {
         return Boolean.parseBoolean(System.getProperty("headless", "false"));
@@ -57,7 +57,7 @@ public final class ConfigReader {
     }
 
     /**
-     * Resolves the repository root from the compiled classes location
+     * Resolve a raiz do repositório a partir do local das classes compiladas
      * ({@code <repo>/selenium-junit/target/classes}).
      */
     private static Path getRaizDoRepositorio() {

@@ -4,8 +4,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 /**
- * Represents the secure area page (https://the-internet.herokuapp.com/secure) that a user
- * is redirected to after a successful login.
+ * Representa a página da área segura (https://the-internet.herokuapp.com/secure) para a qual
+ * o usuário é redirecionado após um login bem-sucedido.
  */
 public class SecurePage extends BasePage {
 

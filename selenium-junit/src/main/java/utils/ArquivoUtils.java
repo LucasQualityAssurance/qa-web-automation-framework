@@ -7,7 +7,7 @@ import java.nio.file.Path;
 import java.util.stream.Stream;
 
 /**
- * File system helpers used by the tests.
+ * Utilitários de sistema de arquivos usados pelos testes.
  */
 public final class ArquivoUtils {
 
@@ -15,10 +15,10 @@ public final class ArquivoUtils {
     }
 
     /**
-     * Creates the directory when it does not exist and deletes every file inside it,
-     * so each run starts from an empty folder (no leftovers from previous runs).
+     * Cria o diretório quando ele não existe e apaga todos os arquivos dentro dele, para que
+     * cada execução comece com a pasta vazia (sem sobras de execuções anteriores).
      *
-     * @param diretorio directory to clean.
+     * @param diretorio diretório a limpar.
      */
     public static void limparDiretorio(Path diretorio) {
         try {

@@ -9,12 +9,12 @@ import java.nio.file.Path;
 import java.time.Instant;
 
 /**
- * Represents the File Downloader page (https://the-internet.herokuapp.com/download),
- * which lists every file available for download.
+ * Representa a página File Downloader (https://the-internet.herokuapp.com/download),
+ * que lista todos os arquivos disponíveis para download.
  * <p>
- * Besides files uploaded by anyone, the site always ships a fixed set of files that are
- * never removed nor overwritten (sample.pdf, sample.csv, sample.json, some-file.txt and
- * textfile.txt), so tests should download one of those to stay deterministic.
+ * Além dos arquivos enviados por qualquer pessoa, o site sempre traz um conjunto fixo de arquivos
+ * que nunca são removidos nem sobrescritos (sample.pdf, sample.csv, sample.json, some-file.txt e
+ * textfile.txt), então os testes devem baixar um deles para continuarem determinísticos.
  */
 public class DownloadPage extends BasePage {
 
@@ -25,9 +25,9 @@ public class DownloadPage extends BasePage {
     }
 
     /**
-     * Navigates to the File Downloader page, waiting until the file list is visible.
+     * Navega para a página File Downloader, aguardando até que a lista de arquivos esteja visível.
      *
-     * @return this page, to allow fluent chaining.
+     * @return esta página, para permitir encadeamento fluente.
      */
     public DownloadPage abrir() {
         navegarPara("/download", listaDeArquivos);
@@ -35,11 +35,11 @@ public class DownloadPage extends BasePage {
     }
 
     /**
-     * Clicks the link of the given file and waits until Chrome finishes saving it into
-     * {@link ConfigReader#getDiretorioDownload()} (no save dialog is shown).
+     * Clica no link do arquivo informado e aguarda o Chrome terminar de salvá-lo em
+     * {@link ConfigReader#getDiretorioDownload()} (nenhuma janela de salvar é exibida).
      *
-     * @param nomeArquivo name of the file, exactly as listed on the page (e.g. "some-file.txt").
-     * @return the path of the downloaded file.
+     * @param nomeArquivo nome do arquivo, exatamente como aparece na página (ex.: "some-file.txt").
+     * @return o caminho do arquivo baixado.
      */
     public Path baixarArquivo(String nomeArquivo) {
         aguardarVisivel(listaDeArquivos);

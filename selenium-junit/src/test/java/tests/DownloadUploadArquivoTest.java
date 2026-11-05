@@ -19,14 +19,14 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Validates the file download + upload flow at https://the-internet.herokuapp.com/.
- * Starting from the home page, downloads a file (saving it into the project's
- * {@code Files} folder, see {@link ConfigReader#getDiretorioDownload()}), returns to the
- * home page, opens the File Uploader example, uploads that same file from the project
- * folder and confirms the "File Uploaded!" confirmation heading.
+ * Valida o fluxo de download + upload de arquivo em https://the-internet.herokuapp.com/.
+ * A partir da página inicial, baixa um arquivo (salvando-o na pasta {@code Files} do projeto,
+ * veja {@link ConfigReader#getDiretorioDownload()}), volta para a página inicial, abre o
+ * exemplo File Uploader, envia esse mesmo arquivo a partir da pasta do projeto e confirma
+ * o título de confirmação "File Uploaded!".
  * <p>
- * The downloaded file is one of the files the site always ships (never removed nor
- * overwritten by other users' uploads), which keeps the scenario deterministic.
+ * O arquivo baixado é um dos arquivos que o site sempre traz (nunca removidos nem
+ * sobrescritos pelos uploads de outros usuários), o que mantém o cenário determinístico.
  */
 @Feature("Download e Upload")
 public class DownloadUploadArquivoTest extends BaseTest {

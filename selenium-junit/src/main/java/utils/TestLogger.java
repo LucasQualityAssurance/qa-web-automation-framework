@@ -3,9 +3,9 @@ package utils;
 import io.qameta.allure.Allure;
 
 /**
- * Small helper to report step-by-step progress of a test, making it easy to follow what
- * the automation is doing (not only the final result). Each step is printed to the
- * terminal and also recorded as a step of the test in the Allure report.
+ * Pequeno utilitário para reportar o andamento do teste passo a passo, facilitando acompanhar
+ * o que a automação está fazendo (não só o resultado final). Cada passo é impresso no
+ * terminal e também registrado como um step do teste no relatório Allure.
  */
 public final class TestLogger {
 
@@ -13,10 +13,10 @@ public final class TestLogger {
     }
 
     /**
-     * Prints a step message to the terminal, prefixed with "[STEP]" for easy identification,
-     * and records it as a step in the Allure report.
+     * Imprime a mensagem do passo no terminal, com o prefixo "[STEP]" para fácil identificação,
+     * e a registra como um step no relatório Allure.
      *
-     * @param mensagem description of the step being executed.
+     * @param mensagem descrição do passo que está sendo executado.
      */
     public static void step(String mensagem) {
         System.out.println("[STEP] " + mensagem);

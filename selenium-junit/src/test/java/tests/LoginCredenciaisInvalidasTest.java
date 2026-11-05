@@ -10,9 +10,9 @@ import utils.TestLogger;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Validates the negative (unhappy path) scenarios of the form authentication flow at
- * https://the-internet.herokuapp.com/login, confirming the error messages shown
- * when the user fails to authenticate. Each row of the table is one scenario.
+ * Valida os cenários negativos (caminho infeliz) do fluxo de autenticação por formulário em
+ * https://the-internet.herokuapp.com/login, confirmando as mensagens de erro exibidas
+ * quando o usuário não consegue se autenticar. Cada linha da tabela é um cenário.
  */
 @Feature("Login")
 public class LoginCredenciaisInvalidasTest extends BaseTest {

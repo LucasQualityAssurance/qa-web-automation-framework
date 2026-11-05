@@ -12,7 +12,7 @@ import utils.AllureAmbiente;
 import utils.TestLogger;
 
 /**
- * Base class for all tests: handles WebDriver setup and teardown.
+ * Classe base de todos os testes: cuida da criação e do encerramento do WebDriver.
  */
 public abstract class BaseTest {
 

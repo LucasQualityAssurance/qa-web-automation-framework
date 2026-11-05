@@ -4,7 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 /**
- * Represents the result page shown after submitting the File Uploader form
+ * Representa a página de resultado exibida após o envio do formulário File Uploader
  * (https://the-internet.herokuapp.com/upload).
  */
 public class UploadResultPage extends BasePage {

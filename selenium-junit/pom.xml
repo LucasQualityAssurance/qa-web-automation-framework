@@ -15,14 +15,14 @@
     <properties>
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- Run without opening the browser window: mvn test -Dheadless=true -->
+        <!-- Rodar sem abrir a janela do navegador: mvn test -Dheadless=true -->
         <headless>false</headless>
         <allure.version>2.35.1</allure.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!-- Keeps every JUnit artifact on the same version (Allure pulls an older JUnit launcher) -->
+            <!-- Mantém todos os artefatos do JUnit na mesma versão (o Allure traz um JUnit launcher mais antigo) -->
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
@@ -30,7 +30,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!-- Override to fix a transitive vulnerable dependency pulled in by selenium-java -->
+            <!-- Sobrescreve para corrigir uma dependência transitiva vulnerável trazida pelo selenium-java -->
             <dependency>
                 <groupId>io.opentelemetry</groupId>
                 <artifactId>opentelemetry-api</artifactId>
@@ -53,7 +53,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Allure report: records each test, its steps and its result into target/allure-results -->
+        <!-- Relatório Allure: registra cada teste, seus passos e seu resultado em target/allure-results -->
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-jupiter</artifactId>
@@ -76,7 +76,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Builds and opens the report: mvn allure:serve (downloads the Allure tool automatically) -->
+            <!-- Gera e abre o relatório: mvn allure:serve (baixa a ferramenta do Allure automaticamente) -->
             <plugin>
                 <groupId>io.qameta.allure</groupId>
                 <artifactId>allure-maven</artifactId>

@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Responsible for creating and configuring the WebDriver instance used in the tests.
- * The driver binary is resolved automatically by Selenium Manager (bundled with Selenium).
+ * Responsável por criar e configurar a instância do WebDriver usada nos testes.
+ * O binário do driver é resolvido automaticamente pelo Selenium Manager (incluído no Selenium).
  */
 public class DriverFactory {
 

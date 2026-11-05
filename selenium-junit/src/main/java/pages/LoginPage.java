@@ -4,8 +4,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 /**
- * Represents the login page of https://the-internet.herokuapp.com/login.
- * Responsible for filling in credentials and submitting the authentication form.
+ * Representa a página de login de https://the-internet.herokuapp.com/login.
+ * Responsável por preencher as credenciais e enviar o formulário de autenticação.
  */
 public class LoginPage extends BasePage {
 
@@ -19,9 +19,9 @@ public class LoginPage extends BasePage {
     }
 
     /**
-     * Navigates to the login page, waiting until the username field is visible.
+     * Navega para a página de login, aguardando até que o campo de usuário esteja visível.
      *
-     * @return this page, to allow fluent chaining.
+     * @return esta página, para permitir encadeamento fluente.
      */
     public LoginPage abrir() {
         navegarPara("/login", campoUsuario);
@@ -29,9 +29,9 @@ public class LoginPage extends BasePage {
     }
 
     /**
-     * Fills in valid credentials and submits the login form.
+     * Preenche credenciais válidas e envia o formulário de login.
      *
-     * @return the {@link SecurePage} the user is redirected to after a successful login.
+     * @return a {@link SecurePage} para a qual o usuário é redirecionado após um login bem-sucedido.
      */
     public SecurePage fazerLogin(String usuario, String senha) {
         enviarFormulario(usuario, senha);
@@ -39,11 +39,11 @@ public class LoginPage extends BasePage {
     }
 
     /**
-     * Fills in the credentials (either of which may be blank) and submits the login form,
-     * staying on the login page. Use this for negative scenarios where authentication is
-     * expected to fail and the error message needs to be captured.
+     * Preenche as credenciais (qualquer uma pode ficar em branco) e envia o formulário de login,
+     * permanecendo na página de login. Use nos cenários negativos, em que se espera que a
+     * autenticação falhe e a mensagem de erro precisa ser capturada.
      *
-     * @return this page, to allow fluent chaining.
+     * @return esta página, para permitir encadeamento fluente.
      */
     public LoginPage tentarLogin(String usuario, String senha) {
         enviarFormulario(usuario, senha);
@@ -51,7 +51,7 @@ public class LoginPage extends BasePage {
     }
 
     /**
-     * Reads the error message displayed on the login page after a failed authentication attempt.
+     * Lê a mensagem de erro exibida na página de login após uma tentativa de autenticação malsucedida.
      */
     public String obterMensagemDeErro() {
         return obterTexto(mensagemDeErro);

@@ -7,10 +7,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
 /**
- * Represents the Large Form page (https://the-internet.herokuapp.com/large_form),
- * a long form with many kinds of fields (good ids, only a name, or nothing useful at all).
- * Every field on the screen is covered here: text inputs, date, number, selects (single
- * and multiple), textarea, radio buttons, checkboxes, range slider and color picker.
+ * Representa a página Large Form (https://the-internet.herokuapp.com/large_form),
+ * um formulário longo com vários tipos de campo (com bons ids, só com name ou sem nada útil).
+ * Todos os campos da tela são cobertos aqui: campos de texto, data, número, selects (simples
+ * e múltiplo), textarea, radio buttons, checkboxes, slider de intervalo e seletor de cor.
  */
 public class LargeFormPage extends BasePage {
 
@@ -34,9 +34,9 @@ public class LargeFormPage extends BasePage {
     }
 
     /**
-     * Navigates to the Large Form page, waiting until the first name field is visible.
+     * Navega para a página Large Form, aguardando até que o campo de primeiro nome esteja visível.
      *
-     * @return this page, to allow fluent chaining.
+     * @return esta página, para permitir encadeamento fluente.
      */
     public LargeFormPage abrir() {
         navegarPara("/large_form", campoPrimeiroNome);
@@ -44,10 +44,10 @@ public class LargeFormPage extends BasePage {
     }
 
     /**
-     * Fills in every text/date/number/select/textarea field of the "Account" and
-     * "Details" sections.
+     * Preenche todos os campos de texto/data/número/select/textarea das seções
+     * "Account" e "Details".
      *
-     * @return this page, to allow fluent chaining.
+     * @return esta página, para permitir encadeamento fluente.
      */
     public LargeFormPage preencherFormulario(String primeiroNome, String sobrenome, String email,
                                              String senha, String apelido, String aniversario,
@@ -65,10 +65,10 @@ public class LargeFormPage extends BasePage {
     }
 
     /**
-     * Selects one or more options in the "Languages" multiple-select list.
+     * Seleciona uma ou mais opções na lista de seleção múltipla "Languages".
      *
-     * @param idiomas visible text of each language (English, German, Hindi or Spanish).
-     * @return this page, to allow fluent chaining.
+     * @param idiomas texto visível de cada idioma (English, German, Hindi ou Spanish).
+     * @return esta página, para permitir encadeamento fluente.
      */
     public LargeFormPage selecionarIdiomas(String... idiomas) {
         Select select = new Select(aguardarVisivel(listaIdiomas));
@@ -79,10 +79,10 @@ public class LargeFormPage extends BasePage {
     }
 
     /**
-     * Selects the "Contact me by" radio option.
+     * Seleciona a opção de radio "Contact me by".
      *
-     * @param valor the radio's value attribute: "email", "phone" or "none".
-     * @return this page, to allow fluent chaining.
+     * @param valor atributo value do radio: "email", "phone" ou "none".
+     * @return esta página, para permitir encadeamento fluente.
      */
     public LargeFormPage selecionarContato(String valor) {
         clicar(By.cssSelector("input[name='contact'][value='" + valor + "']"));
@@ -90,10 +90,10 @@ public class LargeFormPage extends BasePage {
     }
 
     /**
-     * Checks one or more "Interests" checkboxes.
+     * Marca um ou mais checkboxes de "Interests".
      *
-     * @param valores the checkbox's value attribute(s): "testing", "automation", "devops".
-     * @return this page, to allow fluent chaining.
+     * @param valores atributo(s) value do checkbox: "testing", "automation", "devops".
+     * @return esta página, para permitir encadeamento fluente.
      */
     public LargeFormPage selecionarInteresses(String... valores) {
         for (String valor : valores) {
@@ -103,11 +103,11 @@ public class LargeFormPage extends BasePage {
     }
 
     /**
-     * Sets the "Years of experience" range slider via JavaScript, since range sliders
-     * cannot be reliably moved with sendKeys/click.
+     * Define o slider "Years of experience" via JavaScript, já que sliders de intervalo
+     * não podem ser movidos de forma confiável com sendKeys/click.
      *
-     * @param anos value between 0 and 30.
-     * @return this page, to allow fluent chaining.
+     * @param anos valor entre 0 e 30.
+     * @return esta página, para permitir encadeamento fluente.
      */
     public LargeFormPage definirAnosDeExperiencia(int anos) {
         definirValorViaJavaScript(aguardarVisivel(controleExperiencia), String.valueOf(anos));
@@ -115,11 +115,11 @@ public class LargeFormPage extends BasePage {
     }
 
     /**
-     * Sets the "Favorite color" picker via JavaScript, since color inputs open a native
-     * OS color-picker dialog that Selenium cannot interact with directly.
+     * Define o seletor "Favorite color" via JavaScript, já que campos de cor abrem a janela
+     * nativa de seleção de cor do sistema, com a qual o Selenium não consegue interagir.
      *
-     * @param corHexadecimal color in hex format (e.g. "#00ff00").
-     * @return this page, to allow fluent chaining.
+     * @param corHexadecimal cor em formato hexadecimal (ex.: "#00ff00").
+     * @return esta página, para permitir encadeamento fluente.
      */
     public LargeFormPage definirCorFavorita(String corHexadecimal) {
         definirValorViaJavaScript(aguardarVisivel(campoCor), corHexadecimal);
@@ -127,9 +127,9 @@ public class LargeFormPage extends BasePage {
     }
 
     /**
-     * Checks the "I accept the terms" checkbox, required to submit the form.
+     * Marca o checkbox "I accept the terms", obrigatório para enviar o formulário.
      *
-     * @return this page, to allow fluent chaining.
+     * @return esta página, para permitir encadeamento fluente.
      */
     public LargeFormPage aceitarTermos() {
         clicar(caixaTermos);
@@ -137,9 +137,9 @@ public class LargeFormPage extends BasePage {
     }
 
     /**
-     * Submits the form.
+     * Envia o formulário.
      *
-     * @return the {@link FormResultPage} the user is redirected to after submitting.
+     * @return a {@link FormResultPage} para a qual o usuário é redirecionado após o envio.
      */
     public FormResultPage enviar() {
         clicar(botaoEnviar);

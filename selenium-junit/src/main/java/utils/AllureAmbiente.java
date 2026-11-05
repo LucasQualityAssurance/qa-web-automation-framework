@@ -8,8 +8,8 @@ import java.nio.file.Path;
 import java.util.Properties;
 
 /**
- * Writes the {@code environment.properties} file read by Allure, so the report's overview
- * shows where and how the tests ran (site under test, browser, headless mode, Java version).
+ * Grava o arquivo {@code environment.properties} lido pelo Allure, para que a visão geral do
+ * relatório mostre onde e como os testes rodaram (site sob teste, navegador, modo headless, versão do Java).
  */
 public final class AllureAmbiente {
 

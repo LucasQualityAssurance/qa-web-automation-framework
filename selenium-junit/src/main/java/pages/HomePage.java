@@ -4,12 +4,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 /**
- * Represents the home page of https://the-internet.herokuapp.com/.
- * Every test must land on this page before exercising any other flow, since all
- * the available scenarios are reachable from here. It is the pre-requisite
- * starting point for any tester running the automation.
+ * Representa a página inicial de https://the-internet.herokuapp.com/.
+ * Todo teste deve passar por esta página antes de exercitar qualquer outro fluxo, já que
+ * todos os cenários disponíveis são acessados a partir daqui. É o ponto de partida
+ * obrigatório para qualquer testador que execute a automação.
  * <p>
- * Example links are located by their href, which is more stable than the visible text.
+ * Os links dos exemplos são localizados pelo href, que é mais estável que o texto visível.
  */
 public class HomePage extends BasePage {
 
@@ -23,10 +23,10 @@ public class HomePage extends BasePage {
     }
 
     /**
-     * Navigates to the home page, waiting until the heading is visible so every
-     * automation starts from a known, fully-loaded state.
+     * Navega para a página inicial, aguardando até que o título esteja visível, para que toda
+     * automação comece de um estado conhecido e totalmente carregado.
      *
-     * @return this page, to allow fluent chaining.
+     * @return esta página, para permitir encadeamento fluente.
      */
     public HomePage abrir() {
         navegarPara("/", titulo);

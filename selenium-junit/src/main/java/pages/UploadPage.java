@@ -6,7 +6,7 @@ import org.openqa.selenium.WebDriver;
 import java.nio.file.Path;
 
 /**
- * Represents the File Uploader page (https://the-internet.herokuapp.com/upload).
+ * Representa a página File Uploader (https://the-internet.herokuapp.com/upload).
  */
 public class UploadPage extends BasePage {
 
@@ -18,9 +18,9 @@ public class UploadPage extends BasePage {
     }
 
     /**
-     * Navigates to the File Uploader page, waiting until the file input is visible.
+     * Navega para a página File Uploader, aguardando até que o campo de arquivo esteja visível.
      *
-     * @return this page, to allow fluent chaining.
+     * @return esta página, para permitir encadeamento fluente.
      */
     public UploadPage abrir() {
         navegarPara("/upload", campoArquivo);
@@ -28,12 +28,12 @@ public class UploadPage extends BasePage {
     }
 
     /**
-     * Chooses the file to upload by sending its absolute path directly to the native
-     * file input, since Selenium cannot interact with OS file dialogs. The browser then
-     * reads the file from this machine (in this project, from the downloads folder).
+     * Escolhe o arquivo a enviar mandando seu caminho absoluto direto para o campo de arquivo
+     * nativo, já que o Selenium não consegue interagir com as janelas de arquivo do sistema.
+     * O navegador então lê o arquivo desta máquina (neste projeto, da pasta de downloads).
      *
-     * @param arquivo path of the file to upload.
-     * @return this page, to allow fluent chaining.
+     * @param arquivo caminho do arquivo a enviar.
+     * @return esta página, para permitir encadeamento fluente.
      */
     public UploadPage escolherArquivo(Path arquivo) {
         escrever(campoArquivo, arquivo.toAbsolutePath().toString());
@@ -41,9 +41,9 @@ public class UploadPage extends BasePage {
     }
 
     /**
-     * Clicks the "Upload" button, submitting the chosen file.
+     * Clica no botão "Upload", enviando o arquivo escolhido.
      *
-     * @return the {@link UploadResultPage} the user is redirected to.
+     * @return a {@link UploadResultPage} para a qual o usuário é redirecionado.
      */
     public UploadResultPage carregar() {
         clicar(botaoCarregar);

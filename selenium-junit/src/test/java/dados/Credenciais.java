@@ -1,8 +1,8 @@
 package dados;
 
 /**
- * Login credentials of https://the-internet.herokuapp.com/login, shared by the login tests.
- * The valid ones are published by the site itself on the login page.
+ * Credenciais de login de https://the-internet.herokuapp.com/login, compartilhadas pelos testes de login.
+ * As válidas são publicadas pelo próprio site na página de login.
  */
 public final class Credenciais {
 
