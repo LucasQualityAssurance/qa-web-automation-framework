@@ -17,6 +17,9 @@ public class HomePage extends BasePage {
     private final By linkFormularioGrande = By.cssSelector("a[href='/large_form']");
     private final By linkDownloadDeArquivos = By.cssSelector("a[href='/download']");
     private final By linkUploadDeArquivos = By.cssSelector("a[href='/upload']");
+    private final By linkCarregamentoDinamico = By.cssSelector("a[href='/dynamic_loading']");
+    private final By linkAlertasJavaScript = By.cssSelector("a[href='/javascript_alerts']");
+    private final By linkMultiplasJanelas = By.cssSelector("a[href='/windows']");
 
     public HomePage(WebDriver driver) {
         super(driver);
@@ -50,5 +53,20 @@ public class HomePage extends BasePage {
     public UploadPage acessarUploadDeArquivos() {
         clicar(linkUploadDeArquivos);
         return new UploadPage(driver);
+    }
+
+    public DynamicLoadingPage acessarCarregamentoDinamico() {
+        clicar(linkCarregamentoDinamico);
+        return new DynamicLoadingPage(driver);
+    }
+
+    public JavaScriptAlertsPage acessarAlertasJavaScript() {
+        clicar(linkAlertasJavaScript);
+        return new JavaScriptAlertsPage(driver);
+    }
+
+    public MultipleWindowsPage acessarMultiplasJanelas() {
+        clicar(linkMultiplasJanelas);
+        return new MultipleWindowsPage(driver);
     }
 }

@@ -1,5 +1,6 @@
 package pages;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -46,5 +47,15 @@ public abstract class BasePage {
 
     protected String obterTexto(By localizador) {
         return aguardarVisivel(localizador).getText();
+    }
+
+    /**
+     * Aguarda até que um alerta JavaScript (alert, confirm ou prompt) esteja aberto e troca
+     * o foco para ele.
+     *
+     * @return o alerta aberto.
+     */
+    protected Alert aguardarAlerta() {
+        return wait.until(ExpectedConditions.alertIsPresent());
     }
 }
