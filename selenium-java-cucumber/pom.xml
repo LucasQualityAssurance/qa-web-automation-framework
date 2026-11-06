@@ -17,13 +17,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Rodar sem abrir a janela do navegador: mvn test -Dheadless=true -->
         <headless>false</headless>
-        <cucumber.version>7.20.1</cucumber.version>
         <allure.version>2.35.1</allure.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!-- Mantém todos os artefatos do JUnit na mesma versão -->
+            <!-- Mantém todos os artefatos do JUnit na mesma versão (o Allure traz um JUnit launcher mais antigo) -->
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
@@ -31,14 +30,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <dependency>
-                <groupId>io.cucumber</groupId>
-                <artifactId>cucumber-bom</artifactId>
-                <version>${cucumber.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <!-- Sobrescreve para corrigir uma dependência transitiva vulnerável trazida pelo selenium-java -->
+            <!-- Sobrescreve para corrigir uma dependência transitiva vulnerável trazida pela biblioteca do Selenium -->
             <dependency>
                 <groupId>io.opentelemetry</groupId>
                 <artifactId>opentelemetry-api</artifactId>
@@ -55,29 +47,17 @@
             <version>4.38.0</version>
         </dependency>
 
-        <!-- Cucumber: cenários escritos em Gherkin (.feature) e executados pela JUnit Platform -->
         <dependency>
-            <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-java</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-junit-platform-engine</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-suite</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
 
-        <!-- Relatório Allure para os cenários do Cucumber -->
+        <!-- Relatório Allure: registra cada teste, seus passos e seu resultado em target/allure-results -->
         <dependency>
             <groupId>io.qameta.allure</groupId>
-            <artifactId>allure-cucumber7-jvm</artifactId>
+            <artifactId>allure-jupiter</artifactId>
             <version>${allure.version}</version>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>
