@@ -15,6 +15,7 @@ public final class ConfigReader {
 
     private static final Duration TEMPO_ESPERA_PADRAO = Duration.ofSeconds(10);
     private static final Duration TEMPO_ESPERA_DOWNLOAD = Duration.ofSeconds(20);
+    private static final long PAUSA_ENTRE_PASSOS_PADRAO_SEGUNDOS = 2;
 
     private ConfigReader() {
     }
@@ -46,6 +47,19 @@ public final class ConfigReader {
      */
     public static boolean isHeadless() {
         return Boolean.parseBoolean(System.getProperty("headless", "false"));
+    }
+
+    /**
+     * Pausa feita depois de cada passo do teste, para que dê tempo de ver a ação no navegador.
+     * O padrão é 2 segundos com a janela visível e nenhuma pausa no modo headless (em que não
+     * há nada para ver). Pode ser alterada com {@code -DpausaEntrePassos=<segundos>}; use
+     * {@code -DpausaEntrePassos=0} para rodar na velocidade normal.
+     *
+     * @return a duração da pausa entre os passos.
+     */
+    public static Duration getPausaEntrePassos() {
+        long padrao = isHeadless() ? 0 : PAUSA_ENTRE_PASSOS_PADRAO_SEGUNDOS;
+        return Duration.ofSeconds(Long.getLong("pausaEntrePassos", padrao));
     }
 
     public static Duration getTempoEsperaPadrao() {

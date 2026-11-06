@@ -35,7 +35,7 @@ public class DownloadUploadArquivoTest extends BaseTest {
 
     @BeforeEach
     public void limparPastaDeDownload() {
-        TestLogger.step("Limpando a pasta de download: " + ConfigReader.getDiretorioDownload());
+        TestLogger.info("Limpando a pasta de download: " + ConfigReader.getDiretorioDownload());
         ArquivoUtils.limparDiretorio(ConfigReader.getDiretorioDownload());
     }
 

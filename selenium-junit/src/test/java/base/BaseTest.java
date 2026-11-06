@@ -27,7 +27,7 @@ public abstract class BaseTest {
 
     @BeforeEach
     public void setUp(TestInfo testInfo) {
-        TestLogger.step("Iniciando teste: " + testInfo.getDisplayName());
+        TestLogger.info("Iniciando teste: " + testInfo.getDisplayName());
         driver = DriverFactory.criarDriver();
         homePage = new HomePage(driver);
         loginPage = new LoginPage(driver);
@@ -38,6 +38,6 @@ public abstract class BaseTest {
         if (driver != null) {
             driver.quit();
         }
-        TestLogger.step("Teste finalizado: " + testInfo.getDisplayName());
+        TestLogger.info("Teste finalizado: " + testInfo.getDisplayName());
     }
 }

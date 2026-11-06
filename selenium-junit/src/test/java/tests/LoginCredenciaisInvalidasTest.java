@@ -26,7 +26,7 @@ public class LoginCredenciaisInvalidasTest extends BaseTest {
     })
     public void deveExibirErroAoInformarCredenciaisInvalidas(String cenario, String usuario, String senha,
                                                              String mensagemEsperada) {
-        TestLogger.step("Cenario: " + cenario);
+        TestLogger.info("Cenario: " + cenario);
 
         TestLogger.step("Abrindo a pagina de login (/login)");
         loginPage.abrir();

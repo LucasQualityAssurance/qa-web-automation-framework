@@ -26,7 +26,7 @@ public class CadastroFormularioTest extends BaseTest {
     @DisplayName("Deve preencher e enviar o formulario grande com sucesso")
     public void devePreencherEEnviarFormularioComSucesso() {
         DadosFormulario dados = DadosFormulario.aleatorios();
-        TestLogger.step("Dados aleatorios gerados (para repetir: -Dseed=" + dados.semente() + ")");
+        TestLogger.info("Dados aleatorios gerados (para repetir: -Dseed=" + dados.semente() + ")");
 
         TestLogger.step("Abrindo a home page (/)");
         homePage.abrir();
