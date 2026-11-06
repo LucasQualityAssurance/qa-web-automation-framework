@@ -51,14 +51,14 @@ validações comparam os textos originais do site, que estão em inglês.
 
 ## Estrutura do projeto
 
-O projeto Maven fica na pasta `selenium-junit/`, dentro do repositório:
+O projeto Maven fica na pasta `selenium-java/`, dentro do repositório:
 
 ```
 qa-web-automation-framework/
 ├── README.md
 ├── LICENSE
 ├── Files/                                  # Arquivos baixados pelos testes (criada na execução, ignorada pelo Git)
-└── selenium-junit/
+└── selenium-java/
     ├── pom.xml                             # Dependências e plugins (Surefire e Allure)
     └── src
         ├── main/java
@@ -154,10 +154,10 @@ git --version
 
 ```bash
 git clone https://github.com/LucasQualityAssurance/qa-web-automation-framework.git
-cd qa-web-automation-framework/selenium-junit
+cd qa-web-automation-framework/selenium-java
 ```
 
-> Todos os comandos `mvn` devem ser executados dentro da pasta `selenium-junit`, que é onde fica o
+> Todos os comandos `mvn` devem ser executados dentro da pasta `selenium-java`, que é onde fica o
 > `pom.xml`. Rodando de outra pasta, o Maven mostra o erro "there is no POM in this directory".
 
 ### 2. Rodar todos os testes
@@ -247,7 +247,7 @@ de download e é ignorada pelo Git.
 
 ## Rodando pelo IntelliJ IDEA
 
-1. **File → Open** e selecione a pasta `selenium-junit` (a que contém o `pom.xml`). Se o IntelliJ
+1. **File → Open** e selecione a pasta `selenium-java` (a que contém o `pom.xml`). Se o IntelliJ
    perguntar, escolha abrir como projeto Maven e clique em **Trust Project**.
 2. Aguarde o IntelliJ baixar as dependências (barra de progresso no rodapé).
 3. Confira o JDK em **File → Project Structure → Project → SDK**: deve ser um JDK 21. Se não houver,
@@ -263,7 +263,7 @@ Se arquivos novos não aparecerem na árvore do projeto, use **File → Reload A
 
 ## Relatório Allure
 
-Os testes gravam os resultados em `selenium-junit/target/allure-results`. Para ver o relatório:
+Os testes gravam os resultados em `selenium-java/target/allure-results`. Para ver o relatório:
 
 ```bash
 mvn clean test       # roda os testes e grava os resultados
@@ -313,7 +313,7 @@ O relatório mostra:
 |---|---|---|
 | `mvn: command not found` / `'mvn' não é reconhecido` | Maven não instalado ou fora do `PATH` | Instale o Maven e adicione a pasta `bin` ao `PATH`, ou rode pelo IntelliJ |
 | `No compiler is provided in this environment. Perhaps you are running on a JRE rather than a JDK?` | O `JAVA_HOME` aponta para um JRE | Instale o JDK 21 e aponte o `JAVA_HOME` para ele. Confira com `javac -version` |
-| `there is no POM in this directory` | Comando executado fora da pasta do projeto | Entre na pasta `selenium-junit` antes de rodar o `mvn` |
+| `there is no POM in this directory` | Comando executado fora da pasta do projeto | Entre na pasta `selenium-java` antes de rodar o `mvn` |
 | `release version 21 not supported` | Maven rodando com Java mais antigo | Confira com `mvn -version` se o Java é o 21 e ajuste o `JAVA_HOME` |
 | Aviso `Unable to find CDP implementation matching ...` | O Chrome é mais novo que o suporte a DevTools do Selenium | É só um aviso e não afeta os testes |
 | Erro ao iniciar o Chrome / `SessionNotCreatedException` | Chrome não instalado, ou sem internet para baixar o driver | Instale ou atualize o Google Chrome e confira a conexão na primeira execução |

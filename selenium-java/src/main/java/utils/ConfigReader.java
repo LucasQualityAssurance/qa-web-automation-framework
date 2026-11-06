@@ -72,7 +72,7 @@ public final class ConfigReader {
 
     /**
      * Resolve a raiz do repositório a partir do local das classes compiladas
-     * ({@code <repo>/selenium-junit/target/classes}).
+     * ({@code <repo>/selenium-java/target/classes}).
      */
     private static Path getRaizDoRepositorio() {
         try {

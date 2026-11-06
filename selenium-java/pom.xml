@@ -6,11 +6,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>br.com.lqa</groupId>
-    <artifactId>selenium-junit</artifactId>
+    <artifactId>selenium-java</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
-    <name>selenium-junit</name>
+    <name>selenium-java</name>
 
     <properties>
         <maven.compiler.release>21</maven.compiler.release>
