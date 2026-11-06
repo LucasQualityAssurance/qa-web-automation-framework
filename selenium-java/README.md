@@ -1,5 +1,7 @@
 # selenium-java
 
+[![selenium-java](https://github.com/LucasQualityAssurance/qa-web-automation-framework/actions/workflows/selenium-java.yml/badge.svg)](https://github.com/LucasQualityAssurance/qa-web-automation-framework/actions/workflows/selenium-java.yml)
+
 > Parte do repositório [qa-web-automation-framework](../README.md). Para a versão BDD, veja [`selenium-java-cucumber`](../selenium-java-cucumber).
 
 Framework de automação de testes Web construído com **Java 21**, **Selenium 4** e **JUnit 5**,
@@ -20,6 +22,7 @@ elementos dinâmicos...), o que permite exercitar as principais técnicas de aut
 - [Opções de execução](#opções-de-execução)
 - [Rodando pelo IntelliJ IDEA](#rodando-pelo-intellij-idea)
 - [Relatório Allure](#relatório-allure)
+- [Integração contínua (GitHub Actions)](#integração-contínua-github-actions)
 - [Boas práticas adotadas](#boas-práticas-adotadas)
 - [Como criar um novo teste](#como-criar-um-novo-teste)
 - [Solução de problemas](#solução-de-problemas)
@@ -283,6 +286,43 @@ O relatório mostra:
 
 > Use `mvn clean test` antes de gerar o relatório: sem o `clean`, os resultados das execuções
 > anteriores continuam na pasta e aparecem misturados no relatório.
+
+## Integração contínua (GitHub Actions)
+
+Os testes rodam automaticamente no GitHub Actions pelo workflow
+[`.github/workflows/selenium-java.yml`](../.github/workflows/selenium-java.yml). O selo no topo deste
+README mostra o resultado da última execução.
+
+**Quando roda:**
+
+- a cada push na `main` que altere a pasta `selenium-java/` ou o próprio workflow;
+- a cada pull request para a `main` com essas mesmas alterações;
+- manualmente, na aba **Actions → selenium-java → Run workflow**.
+
+**O que faz:**
+
+| Etapa | Comando / ação |
+|---|---|
+| Baixar o código | `actions/checkout` |
+| Instalar o JDK 21 | `actions/setup-java` (Temurin), com cache das dependências do Maven |
+| Rodar os testes | `mvn -B clean test -Dheadless=true` (Chrome sem janela, em Ubuntu) |
+| Gerar o relatório Allure | `mvn -B allure:report`, executado mesmo quando algum teste falha |
+| Publicar o relatório | Artefato `allure-report`, disponível por 14 dias |
+
+**Como ver o relatório de uma execução:**
+
+1. Abra a aba **Actions** do repositório e clique na execução desejada.
+2. No fim da página, em **Artifacts**, baixe o `allure-report` e extraia o `.zip`.
+3. Abra o relatório com um servidor local, dentro da pasta extraída:
+   ```bash
+   npx http-server
+   ```
+   Depois acesse o endereço mostrado no terminal (ex.: http://127.0.0.1:8080). Abrir o
+   `index.html` direto no navegador não funciona, porque o navegador bloqueia o carregamento dos
+   dados do relatório a partir de arquivos locais.
+
+No CI o Chrome já vem instalado na máquina do GitHub, e o Selenium Manager baixa o ChromeDriver
+compatível, então nenhuma configuração extra é necessária.
 
 ## Boas práticas adotadas
 
