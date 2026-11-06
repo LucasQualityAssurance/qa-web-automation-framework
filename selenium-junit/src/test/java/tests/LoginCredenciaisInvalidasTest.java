@@ -1,7 +1,6 @@
 package tests;
 
 import base.BaseTest;
-import io.qameta.allure.Feature;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
@@ -14,7 +13,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * https://the-internet.herokuapp.com/login, confirmando as mensagens de erro exibidas
  * quando o usuário não consegue se autenticar. Cada linha da tabela é um cenário.
  */
-@Feature("Login")
 public class LoginCredenciaisInvalidasTest extends BaseTest {
 
     @ParameterizedTest(name = "{0}")

@@ -1,7 +1,6 @@
 package tests;
 
 import base.BaseTest;
-import io.qameta.allure.Feature;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,7 +27,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * O arquivo baixado é um dos arquivos que o site sempre traz (nunca removidos nem
  * sobrescritos pelos uploads de outros usuários), o que mantém o cenário determinístico.
  */
-@Feature("Download e Upload")
 public class DownloadUploadArquivoTest extends BaseTest {
 
     private static final String ARQUIVO_DO_SITE = "some-file.txt";

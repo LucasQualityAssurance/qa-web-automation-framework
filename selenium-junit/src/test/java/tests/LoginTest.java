@@ -2,7 +2,6 @@ package tests;
 
 import base.BaseTest;
 import dados.Credenciais;
-import io.qameta.allure.Feature;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.SecurePage;
@@ -17,7 +16,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * então este teste navega manualmente para a página inicial em seguida e confirma que o
  * título "Welcome to the-internet" é exibido, encerrando o fluxo de login.
  */
-@Feature("Login")
 public class LoginTest extends BaseTest {
 
     @Test

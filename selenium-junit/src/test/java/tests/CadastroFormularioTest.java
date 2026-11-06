@@ -2,7 +2,6 @@ package tests;
 
 import base.BaseTest;
 import dados.DadosFormulario;
-import io.qameta.allure.Feature;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import pages.FormResultPage;
@@ -19,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * e confirma o título de confirmação "Form Submitted". Os dados são aleatórios a cada execução
  * (veja {@link DadosFormulario}); a semente vai para o log para que uma falha possa ser repetida.
  */
-@Feature("Formulario")
 public class CadastroFormularioTest extends BaseTest {
 
     @Test
