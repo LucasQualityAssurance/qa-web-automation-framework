@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 import org.openqa.selenium.WebDriver;
 import pages.HomePage;
-import pages.LoginPage;
 import utils.AllureAmbiente;
 import utils.TestLogger;
 
@@ -18,7 +17,6 @@ public abstract class BaseTest {
 
     protected WebDriver driver;
     protected HomePage homePage;
-    protected LoginPage loginPage;
 
     @BeforeAll
     public static void registrarAmbienteNoAllure() {
@@ -30,7 +28,6 @@ public abstract class BaseTest {
         TestLogger.info("Iniciando teste: " + testInfo.getDisplayName());
         driver = DriverFactory.criarDriver();
         homePage = new HomePage(driver);
-        loginPage = new LoginPage(driver);
     }
 
     @AfterEach

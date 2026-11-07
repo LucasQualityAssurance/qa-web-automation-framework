@@ -41,6 +41,15 @@ public final class TestLogger {
         Allure.step(mensagem);
     }
 
+    /**
+     * Faz só a pausa de visualização configurada, sem registrar nenhum passo. Usado pelo hook
+     * {@code @AfterStep} do Cucumber, em que cada passo do Gherkin já é registrado pelo próprio
+     * Cucumber e pelo plugin do Allure.
+     */
+    public static void pausarEntrePassos() {
+        pausar(ConfigReader.getPausaEntrePassos());
+    }
+
     private static void pausar(Duration pausa) {
         if (pausa.isZero() || pausa.isNegative()) {
             return;
