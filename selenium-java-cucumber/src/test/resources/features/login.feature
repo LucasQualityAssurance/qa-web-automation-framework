@@ -1,3 +1,4 @@
+
 # language: pt
 @login
 Funcionalidade: Login na área segura
@@ -22,5 +23,5 @@ Funcionalidade: Login na área segura
     Exemplos:
       | situacao                  | usuario         | senha                | mensagem                  |
       | senha em branco           | tomsmith        |                      | Your password is invalid! |
-      | usuário em branco         |                 | SuperSecretPassword! | Your username is invalid! |
-      | usuário e senha inválidos | usuarioInvalido | senhaInvalida        | Your username is invalid! |
+      | usuario em branco         |                 | SuperSecretPassword! | Your username is invalid! |
+      | usuario e senha invalidos | usuarioInvalido | senhaInvalida        | Your username is invalid! |

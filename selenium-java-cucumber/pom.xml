@@ -15,8 +15,6 @@
     <properties>
         <maven.compiler.release>21</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- Rodar sem abrir a janela do navegador: mvn test -Dheadless=true -->
-        <headless>false</headless>
         <allure.version>2.35.1</allure.version>
     </properties>
 
@@ -38,12 +36,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!-- Sobrescreve para corrigir uma dependência transitiva vulnerável trazida pela biblioteca do Selenium -->
-            <dependency>
-                <groupId>io.opentelemetry</groupId>
-                <artifactId>opentelemetry-api</artifactId>
-                <version>1.67.0</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -52,7 +44,7 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>4.38.0</version>
+            <version>4.52.0</version>
         </dependency>
 
         <dependency>
@@ -105,8 +97,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.2</version>
                 <configuration>
+                    <!-- Propriedades passadas com -D na linha de comando (ex.: -Dheadless=true) chegam aos testes sem precisar declará-las aqui -->
                     <systemPropertyVariables>
-                        <headless>${headless}</headless>
                         <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
                     </systemPropertyVariables>
                 </configuration>

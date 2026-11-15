@@ -35,8 +35,5 @@ replay_pid*
 # Local downloads used by the tests
 Files/
 
-# Local tool settings
-.claude/
-
 # Allure tool downloaded by the allure-maven plugin
 .allure/
