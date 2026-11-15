@@ -8,7 +8,8 @@
 
 Portfólio de automação de testes Web em **Java + Selenium**, com duas abordagens para o mesmo
 sistema: testes escritos **100% em Java** com JUnit 5 e testes **BDD com Cucumber**. Os dois
-projetos geram relatório no **Allure**, e a execução roda automaticamente no **GitHub Actions**.
+projetos cobrem os mesmos fluxos e geram relatório no **Allure**. O projeto `selenium-java` roda
+automaticamente no **GitHub Actions**.
 
 ## Sistema testado
 
@@ -23,7 +24,7 @@ JavaScript, múltiplas janelas, carregamento dinâmico de elementos e outras.
 | Pasta | Abordagem | Status |
 |---|---|---|
 | [`selenium-java/`](selenium-java) | Java puro: JUnit 5 + Page Object Model | ✅ Pronto |
-| [`selenium-java-cucumber/`](selenium-java-cucumber) | BDD: Cucumber + Gherkin em português + Page Object Model | 🚧 Em desenvolvimento |
+| [`selenium-java-cucumber/`](selenium-java-cucumber) | BDD: Cucumber + Gherkin em português + Page Object Model | ✅ Pronto |
 
 Cada pasta é um projeto Maven independente, com o próprio `pom.xml` e o próprio README explicando
 como rodar.
@@ -43,10 +44,16 @@ site tem uma classe com seus localizadores e ações, e os testes só conversam 
 ### selenium-java-cucumber: BDD
 
 Os mesmos fluxos escritos como cenários em **Gherkin** (`Dado / Quando / Então`), em português,
-ligados a step definitions em Java e executados pelo **Cucumber** na JUnit Platform. A base do
-projeto já está pronta; os cenários serão adicionados nas próximas etapas.
+ligados a step definitions em Java e executados pelo **Cucumber** na JUnit Platform. Os page
+objects são os mesmos do `selenium-java`.
 
-👉 Veja [`selenium-java-cucumber/README.md`](selenium-java-cucumber/README.md).
+- 6 features e 14 cenários: login válido e inválido, alertas JavaScript, formulário com dados
+  aleatórios reproduzíveis, carregamento dinâmico, download e upload e múltiplas janelas.
+- `Contexto`, `Esquema do Cenário` com `Exemplos` e tags para rodar só uma parte dos cenários
+  (ex.: `mvn test "-Dcucumber.filter.tags=@login and @negativo"`).
+- Hooks que abrem um navegador por cenário e anexam um screenshot ao relatório quando o cenário falha.
+
+👉 Detalhes, cenários e passo a passo em [`selenium-java-cucumber/README.md`](selenium-java-cucumber/README.md).
 
 ## Estrutura do repositório
 
@@ -85,7 +92,8 @@ mvn allure:serve
 
 Não é preciso instalar o Allure: o plugin do Maven baixa a ferramenta na primeira execução. O
 relatório mostra cada teste com seus passos, o resultado e o ambiente da execução (navegador, modo
-headless, versão do Java e sistema operacional).
+headless, versão do Java e sistema operacional). No `selenium-java-cucumber`, os passos são os do
+Gherkin, os cenários ficam agrupados por funcionalidade e as falhas trazem um screenshot anexado.
 
 ## Integração contínua (GitHub Actions)
 
@@ -101,6 +109,9 @@ aba **Actions**. Ele:
 Para ver o relatório, abra a execução na aba **Actions**, baixe o artefato `allure-report` e abra o
 `index.html` com um servidor local (por exemplo, `npx http-server` dentro da pasta extraída).
 
+O `selenium-java-cucumber` ainda não tem workflow próprio: por enquanto os cenários BDD rodam
+localmente.
+
 ## Como rodar localmente
 
 Pré-requisitos: **JDK 21**, **Maven 3.9+** e **Google Chrome**.
@@ -110,6 +121,12 @@ git clone https://github.com/LucasQualityAssurance/qa-web-automation-framework.g
 cd qa-web-automation-framework/selenium-java   # ou selenium-java-cucumber
 mvn test                                       # com o navegador visível
 mvn test -Dheadless=true                       # sem abrir janela
+```
+
+No `selenium-java-cucumber`, dá para rodar só uma funcionalidade pela tag:
+
+```bash
+mvn test "-Dcucumber.filter.tags=@alertas"
 ```
 
 O passo a passo completo (instalação no Windows, macOS e Linux, IntelliJ e solução de problemas)
