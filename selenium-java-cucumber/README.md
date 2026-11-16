@@ -1,5 +1,7 @@
 # selenium-java-cucumber
 
+[![selenium-java-cucumber](https://github.com/LucasQualityAssurance/qa-web-automation-framework/actions/workflows/selenium-java-cucumber.yml/badge.svg)](https://github.com/LucasQualityAssurance/qa-web-automation-framework/actions/workflows/selenium-java-cucumber.yml)
+
 > Parte do repositório [qa-web-automation-framework](../README.md). Para a versão com testes 100% em
 > Java (JUnit 5), veja [`selenium-java`](../selenium-java).
 
@@ -25,6 +27,7 @@ Sauce Labs feito para praticar automação ([código-fonte](https://github.com/s
 - [Opções de execução](#opções-de-execução)
 - [Rodando pelo IntelliJ IDEA](#rodando-pelo-intellij-idea)
 - [Relatórios](#relatórios)
+- [Integração contínua (GitHub Actions)](#integração-contínua-github-actions)
 - [Boas práticas adotadas](#boas-práticas-adotadas)
 - [Como criar um novo cenário](#como-criar-um-novo-cenário)
 - [Solução de problemas](#solução-de-problemas)
@@ -333,6 +336,47 @@ O relatório mostra:
 
 Toda execução também gera um relatório HTML do próprio Cucumber, em um único arquivo que pode ser
 aberto direto no navegador: `target/cucumber-reports/cucumber.html`.
+
+## Integração contínua (GitHub Actions)
+
+Os cenários rodam automaticamente no GitHub Actions pelo workflow
+[`.github/workflows/selenium-java-cucumber.yml`](../.github/workflows/selenium-java-cucumber.yml). O
+selo no topo deste README mostra o resultado da última execução.
+
+**Quando roda:**
+
+- a cada push na `main` que altere a pasta `selenium-java-cucumber/` ou o próprio workflow;
+- a cada pull request para a `main` com essas mesmas alterações;
+- manualmente, na aba **Actions → selenium-java-cucumber → Run workflow**. No campo **tags** dá para
+  informar uma expressão de tags (ex.: `@login and @negativo`); vazio roda todos os cenários.
+
+**O que faz:**
+
+| Etapa | Comando / ação |
+|---|---|
+| Baixar o código | `actions/checkout` |
+| Instalar o JDK 21 | `actions/setup-java` (Temurin), com cache das dependências do Maven |
+| Rodar os cenários | `mvn -B clean test -Dheadless=true` (Chrome sem janela, em Ubuntu), com o filtro de tags quando informado |
+| Gerar o relatório Allure | `mvn -B allure:report`, executado mesmo quando algum cenário falha |
+| Publicar os relatórios | Artefatos `allure-report-cucumber` e `cucumber-html-report`, disponíveis por 14 dias |
+
+O workflow só tem permissão de leitura no repositório, para no máximo 30 minutos, e uma execução nova
+no mesmo branch cancela a anterior que ainda estiver rodando.
+
+**Como ver os relatórios de uma execução:**
+
+1. Abra a aba **Actions** do repositório e clique na execução desejada.
+2. No fim da página, em **Artifacts**, baixe o artefato desejado e extraia o `.zip`.
+3. O `cucumber-html-report` é um arquivo único: abra o `cucumber.html` direto no navegador.
+4. O `allure-report-cucumber` precisa de um servidor local, dentro da pasta extraída:
+   ```bash
+   npx http-server
+   ```
+   Depois acesse o endereço mostrado no terminal (ex.: http://127.0.0.1:8080). Abrir o
+   `index.html` direto no navegador não funciona, porque o navegador bloqueia o carregamento dos
+   dados do relatório a partir de arquivos locais.
+
+Quando um cenário falha no CI, o screenshot da falha fica anexado ao cenário no relatório Allure.
 
 ## Boas práticas adotadas
 

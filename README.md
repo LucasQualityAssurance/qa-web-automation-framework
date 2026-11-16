@@ -1,6 +1,7 @@
 # qa-web-automation-framework
 
 [![selenium-java](https://github.com/LucasQualityAssurance/qa-web-automation-framework/actions/workflows/selenium-java.yml/badge.svg)](https://github.com/LucasQualityAssurance/qa-web-automation-framework/actions/workflows/selenium-java.yml)
+[![selenium-java-cucumber](https://github.com/LucasQualityAssurance/qa-web-automation-framework/actions/workflows/selenium-java-cucumber.yml/badge.svg)](https://github.com/LucasQualityAssurance/qa-web-automation-framework/actions/workflows/selenium-java-cucumber.yml)
 ![Java](https://img.shields.io/badge/Java-21-orange)
 ![Selenium](https://img.shields.io/badge/Selenium-4-43B02A)
 ![Allure](https://img.shields.io/badge/Allure-Report-yellow)
@@ -8,8 +9,8 @@
 
 Portfólio de automação de testes Web em **Java + Selenium**, com duas abordagens para o mesmo
 sistema: testes escritos **100% em Java** com JUnit 5 e testes **BDD com Cucumber**. Os dois
-projetos cobrem os mesmos fluxos e geram relatório no **Allure**. O projeto `selenium-java` roda
-automaticamente no **GitHub Actions**.
+projetos cobrem os mesmos fluxos, geram relatório no **Allure** e rodam automaticamente no
+**GitHub Actions**.
 
 ## Sistema testado
 
@@ -60,7 +61,8 @@ objects são os mesmos do `selenium-java`.
 ```
 qa-web-automation-framework/
 ├── .github/workflows/
-│   └── selenium-java.yml        # Pipeline de CI no GitHub Actions
+│   ├── selenium-java.yml           # CI do projeto selenium-java
+│   └── selenium-java-cucumber.yml  # CI do projeto selenium-java-cucumber
 ├── selenium-java/               # Projeto JUnit 5 + Page Object Model
 ├── selenium-java-cucumber/      # Projeto BDD com Cucumber
 ├── Files/                       # Downloads feitos pelos testes (criada na execução, ignorada pelo Git)
@@ -97,20 +99,28 @@ Gherkin, os cenários ficam agrupados por funcionalidade e as falhas trazem um s
 
 ## Integração contínua (GitHub Actions)
 
-O workflow [`selenium-java.yml`](.github/workflows/selenium-java.yml) roda a cada push ou pull
-request na `main` que altere o projeto `selenium-java`, e também pode ser disparado manualmente na
-aba **Actions**. Ele:
+Cada projeto tem o próprio workflow, que só roda quando a pasta dele (ou o próprio workflow) é
+alterada:
+
+| Workflow | Projeto | Artefatos publicados |
+|---|---|---|
+| [`selenium-java.yml`](.github/workflows/selenium-java.yml) | `selenium-java` | `allure-report` |
+| [`selenium-java-cucumber.yml`](.github/workflows/selenium-java-cucumber.yml) | `selenium-java-cucumber` | `allure-report-cucumber` e `cucumber-html-report` |
+
+Os dois rodam a cada push ou pull request na `main` e também podem ser disparados manualmente na aba
+**Actions**. Cada um:
 
 1. instala o JDK 21 com cache das dependências do Maven;
 2. roda todos os testes no Chrome em modo headless;
 3. gera o relatório Allure, mesmo quando algum teste falha;
-4. publica o relatório como artefato `allure-report` da execução, disponível por 14 dias.
+4. publica os relatórios como artefatos da execução, disponíveis por 14 dias.
 
-Para ver o relatório, abra a execução na aba **Actions**, baixe o artefato `allure-report` e abra o
-`index.html` com um servidor local (por exemplo, `npx http-server` dentro da pasta extraída).
+No disparo manual do workflow do Cucumber, dá para informar uma expressão de tags
+(ex.: `@login and @negativo`) para rodar só parte dos cenários.
 
-O `selenium-java-cucumber` ainda não tem workflow próprio: por enquanto os cenários BDD rodam
-localmente.
+Para ver o relatório Allure, abra a execução na aba **Actions**, baixe o artefato e abra o
+`index.html` com um servidor local (por exemplo, `npx http-server` dentro da pasta extraída). O
+relatório HTML do Cucumber é um arquivo único e abre direto no navegador.
 
 ## Como rodar localmente
 
