@@ -60,6 +60,6 @@ public class LoginPage extends BasePage {
     private void enviarFormulario(String usuario, String senha) {
         escrever(campoUsuario, usuario);
         escrever(campoSenha, senha);
-        clicar(botaoEntrar);
+        clicarENavegar(botaoEntrar);
     }
 }

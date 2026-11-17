@@ -2,6 +2,7 @@ package pages;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -45,8 +46,25 @@ public abstract class BasePage {
         aguardarVisivel(localizador).sendKeys(texto);
     }
 
+    /**
+     * Clica em um elemento que leva a outra página e só retorna depois que a página atual foi
+     * descartada pelo navegador. Sem isso, a próxima busca pode encontrar um elemento da página
+     * antiga (por exemplo, um {@code h3} com o mesmo seletor) e falhar com
+     * {@link StaleElementReferenceException} quando a página nova terminar de carregar.
+     */
+    protected void clicarENavegar(By localizador) {
+        WebElement paginaAtual = driver.findElement(By.tagName("html"));
+        clicar(localizador);
+        wait.until(ExpectedConditions.stalenessOf(paginaAtual));
+    }
+
+    /**
+     * Lê o texto de um elemento visível. Se o elemento for recriado pela página entre a busca e a
+     * leitura, ele é localizado de novo, em vez de falhar com {@link StaleElementReferenceException}.
+     */
     protected String obterTexto(By localizador) {
-        return aguardarVisivel(localizador).getText();
+        return wait.ignoring(StaleElementReferenceException.class)
+                .until(d -> aguardarVisivel(localizador).getText());
     }
 
     /**

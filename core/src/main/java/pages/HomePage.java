@@ -41,32 +41,32 @@ public class HomePage extends BasePage {
     }
 
     public LargeFormPage acessarFormularioGrande() {
-        clicar(linkFormularioGrande);
+        clicarENavegar(linkFormularioGrande);
         return new LargeFormPage(driver);
     }
 
     public DownloadPage acessarDownloadDeArquivos() {
-        clicar(linkDownloadDeArquivos);
+        clicarENavegar(linkDownloadDeArquivos);
         return new DownloadPage(driver);
     }
 
     public UploadPage acessarUploadDeArquivos() {
-        clicar(linkUploadDeArquivos);
+        clicarENavegar(linkUploadDeArquivos);
         return new UploadPage(driver);
     }
 
     public DynamicLoadingPage acessarCarregamentoDinamico() {
-        clicar(linkCarregamentoDinamico);
+        clicarENavegar(linkCarregamentoDinamico);
         return new DynamicLoadingPage(driver);
     }
 
     public JavaScriptAlertsPage acessarAlertasJavaScript() {
-        clicar(linkAlertasJavaScript);
+        clicarENavegar(linkAlertasJavaScript);
         return new JavaScriptAlertsPage(driver);
     }
 
     public MultipleWindowsPage acessarMultiplasJanelas() {
-        clicar(linkMultiplasJanelas);
+        clicarENavegar(linkMultiplasJanelas);
         return new MultipleWindowsPage(driver);
     }
 }

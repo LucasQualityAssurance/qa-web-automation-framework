@@ -33,7 +33,7 @@ public class DynamicLoadingPage extends BasePage {
      * @return a página do exemplo escolhido.
      */
     public DynamicLoadingExamplePage acessarExemplo(int numero) {
-        clicar(By.cssSelector("a[href='/dynamic_loading/" + numero + "']"));
+        clicarENavegar(By.cssSelector("a[href='/dynamic_loading/" + numero + "']"));
         return new DynamicLoadingExamplePage(driver);
     }
 }

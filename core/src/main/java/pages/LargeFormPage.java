@@ -142,7 +142,7 @@ public class LargeFormPage extends BasePage {
      * @return a {@link FormResultPage} para a qual o usuário é redirecionado após o envio.
      */
     public FormResultPage enviar() {
-        clicar(botaoEnviar);
+        clicarENavegar(botaoEnviar);
         return new FormResultPage(driver);
     }
 

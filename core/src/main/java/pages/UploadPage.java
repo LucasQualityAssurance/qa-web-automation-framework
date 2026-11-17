@@ -46,7 +46,7 @@ public class UploadPage extends BasePage {
      * @return a {@link UploadResultPage} para a qual o usuário é redirecionado.
      */
     public UploadResultPage carregar() {
-        clicar(botaoCarregar);
+        clicarENavegar(botaoCarregar);
         return new UploadResultPage(driver);
     }
 }
