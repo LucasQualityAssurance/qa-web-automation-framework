@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       tags:
-        description: 'Expressão de tags do Cucumber (ex.: @login and @negativo). Vazio roda todos os cenários.'
+        description: 'OPCIONAL - filtro de tags do Cucumber, não é o nome da execução (ex.: @login and @negativo). Deixe vazio para rodar tudo.'
         required: false
         default: ''
 
@@ -48,6 +48,10 @@ jobs:
           MODULO: ${{ matrix.modulo }}
           TAGS: ${{ github.event.inputs.tags }}
         run: |
+          if [ -n "$TAGS" ] && [[ "$TAGS" != *@* ]]; then
+            echo "::error title=Filtro de tags inválido::O campo 'tags' recebeu \"$TAGS\", mas ele espera tags do Cucumber começando com @ (ex.: @login and @negativo). Deixe vazio para rodar todos os cenários."
+            exit 1
+          fi
           if [ "$MODULO" = "selenium-java-cucumber" ] && [ -n "$TAGS" ]; then
             echo "Rodando só os cenários com as tags: $TAGS"
             mvn -B clean test -Dheadless=true "-Dcucumber.filter.tags=$TAGS"
