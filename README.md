@@ -1,7 +1,7 @@
 # qa-web-automation-framework
 
-[![selenium-java](https://github.com/LucasQualityAssurance/qa-web-automation-framework/actions/workflows/selenium-java.yml/badge.svg)](https://github.com/LucasQualityAssurance/qa-web-automation-framework/actions/workflows/selenium-java.yml)
-[![selenium-java-cucumber](https://github.com/LucasQualityAssurance/qa-web-automation-framework/actions/workflows/selenium-java-cucumber.yml/badge.svg)](https://github.com/LucasQualityAssurance/qa-web-automation-framework/actions/workflows/selenium-java-cucumber.yml)
+[![CI](https://github.com/LucasQualityAssurance/qa-web-automation-framework/actions/workflows/ci.yml/badge.svg)](https://github.com/LucasQualityAssurance/qa-web-automation-framework/actions/workflows/ci.yml)
+[![Relatório Allure](https://img.shields.io/badge/relatório-online-2f6fde)](https://lucasqualityassurance.github.io/qa-web-automation-framework/)
 ![Java](https://img.shields.io/badge/Java-21-orange)
 ![Selenium](https://img.shields.io/badge/Selenium-4-43B02A)
 ![Allure](https://img.shields.io/badge/Allure-Report-yellow)
@@ -11,6 +11,8 @@ Portfólio de automação de testes Web em **Java + Selenium**, com duas abordag
 sistema: testes escritos **100% em Java** com JUnit 5 e testes **BDD com Cucumber**. Os dois
 projetos cobrem os mesmos fluxos, geram relatório no **Allure** e rodam automaticamente no
 **GitHub Actions**.
+
+📊 **[Ver os relatórios da última execução](https://lucasqualityassurance.github.io/qa-web-automation-framework/)** (Allure e Cucumber, publicados no GitHub Pages).
 
 ## Sistema testado
 
@@ -24,11 +26,13 @@ JavaScript, múltiplas janelas, carregamento dinâmico de elementos e outras.
 
 | Pasta | Abordagem | Status |
 |---|---|---|
+| [`core/`](core) | Código compartilhado: page objects, `DriverFactory`, utilitários e massa de dados | ✅ Pronto |
 | [`selenium-java/`](selenium-java) | Java puro: JUnit 5 + Page Object Model | ✅ Pronto |
 | [`selenium-java-cucumber/`](selenium-java-cucumber) | BDD: Cucumber + Gherkin em português + Page Object Model | ✅ Pronto |
 
-Cada pasta é um projeto Maven independente, com o próprio `pom.xml` e o próprio README explicando
-como rodar.
+O repositório é um projeto **Maven multi-módulo**. As duas abordagens de teste usam o **mesmo**
+módulo `core`: uma correção em um page object vale para os dois projetos, sem código duplicado. O
+`pom.xml` da raiz centraliza as versões das dependências e dos plugins.
 
 ### selenium-java: Java 100%
 
@@ -46,7 +50,7 @@ site tem uma classe com seus localizadores e ações, e os testes só conversam 
 
 Os mesmos fluxos escritos como cenários em **Gherkin** (`Dado / Quando / Então`), em português,
 ligados a step definitions em Java e executados pelo **Cucumber** na JUnit Platform. Os page
-objects são os mesmos do `selenium-java`.
+objects são os mesmos do `selenium-java`, vindos do módulo `core`.
 
 - 6 features e 14 cenários: login válido e inválido, alertas JavaScript, formulário com dados
   aleatórios reproduzíveis, carregamento dinâmico, download e upload e múltiplas janelas.
@@ -60,11 +64,13 @@ objects são os mesmos do `selenium-java`.
 
 ```
 qa-web-automation-framework/
-├── .github/workflows/
-│   ├── selenium-java.yml           # CI do projeto selenium-java
-│   └── selenium-java-cucumber.yml  # CI do projeto selenium-java-cucumber
-├── selenium-java/               # Projeto JUnit 5 + Page Object Model
-├── selenium-java-cucumber/      # Projeto BDD com Cucumber
+├── .github/
+│   ├── workflows/ci.yml     # CI: roda os dois projetos e publica os relatórios no GitHub Pages
+│   └── pages/index.html         # Página inicial dos relatórios publicados
+├── pom.xml                      # POM pai: módulos, versões e plugins compartilhados
+├── core/                        # Page objects, DriverFactory, utilitários e massa de dados
+├── selenium-java/               # Testes JUnit 5
+├── selenium-java-cucumber/      # Cenários BDD com Cucumber
 ├── Files/                       # Downloads feitos pelos testes (criada na execução, ignorada pelo Git)
 ├── LICENSE
 └── README.md
@@ -82,45 +88,38 @@ qa-web-automation-framework/
 | Allure Report | Relatório com os passos de cada teste |
 | GitHub Actions | Integração contínua |
 
-## Relatório Allure
+## Relatórios
 
-Os dois projetos gravam os resultados em `target/allure-results`. Para gerar e abrir o relatório,
-dentro da pasta do projeto:
+Os relatórios da última execução na `main` ficam publicados no **GitHub Pages**:
+**https://lucasqualityassurance.github.io/qa-web-automation-framework/**
+
+| Relatório | Conteúdo |
+|---|---|
+| Allure: `selenium-java` | Cada teste com seus passos, o resultado e o ambiente da execução |
+| Allure: `selenium-java-cucumber` | Passos do Gherkin, cenários agrupados por funcionalidade e screenshot nas falhas |
+| HTML do Cucumber | Relatório nativo do Cucumber, em um único arquivo |
+
+Para gerar o relatório Allure na sua máquina, na raiz do repositório:
 
 ```bash
-mvn clean test
-mvn allure:serve
+mvn clean test -pl selenium-java -am
+mvn allure:serve -pl selenium-java
 ```
 
-Não é preciso instalar o Allure: o plugin do Maven baixa a ferramenta na primeira execução. O
-relatório mostra cada teste com seus passos, o resultado e o ambiente da execução (navegador, modo
-headless, versão do Java e sistema operacional). No `selenium-java-cucumber`, os passos são os do
-Gherkin, os cenários ficam agrupados por funcionalidade e as falhas trazem um screenshot anexado.
+Não é preciso instalar o Allure: o plugin do Maven baixa a ferramenta na primeira execução.
 
 ## Integração contínua (GitHub Actions)
 
-Cada projeto tem o próprio workflow, que só roda quando a pasta dele (ou o próprio workflow) é
-alterada:
+O workflow [`ci.yml`](.github/workflows/ci.yml) roda a cada push ou pull request na `main`
+e também pode ser disparado manualmente na aba **Actions**. Ele:
 
-| Workflow | Projeto | Artefatos publicados |
-|---|---|---|
-| [`selenium-java.yml`](.github/workflows/selenium-java.yml) | `selenium-java` | `allure-report` |
-| [`selenium-java-cucumber.yml`](.github/workflows/selenium-java-cucumber.yml) | `selenium-java-cucumber` | `allure-report-cucumber` e `cucumber-html-report` |
+1. roda os dois projetos **em paralelo** (um job para cada), no Chrome em modo headless, com JDK 21 e cache do Maven;
+2. gera os relatórios Allure, mesmo quando algum teste falha;
+3. publica os relatórios como artefatos da execução, disponíveis por 14 dias;
+4. na `main`, publica os relatórios no **GitHub Pages**.
 
-Os dois rodam a cada push ou pull request na `main` e também podem ser disparados manualmente na aba
-**Actions**. Cada um:
-
-1. instala o JDK 21 com cache das dependências do Maven;
-2. roda todos os testes no Chrome em modo headless;
-3. gera o relatório Allure, mesmo quando algum teste falha;
-4. publica os relatórios como artefatos da execução, disponíveis por 14 dias.
-
-No disparo manual do workflow do Cucumber, dá para informar uma expressão de tags
-(ex.: `@login and @negativo`) para rodar só parte dos cenários.
-
-Para ver o relatório Allure, abra a execução na aba **Actions**, baixe o artefato e abra o
-`index.html` com um servidor local (por exemplo, `npx http-server` dentro da pasta extraída). O
-relatório HTML do Cucumber é um arquivo único e abre direto no navegador.
+No disparo manual dá para informar uma expressão de tags do Cucumber (ex.: `@login and @negativo`)
+para rodar só parte dos cenários.
 
 ## Como rodar localmente
 
@@ -128,15 +127,18 @@ Pré-requisitos: **JDK 21**, **Maven 3.9+** e **Google Chrome**.
 
 ```bash
 git clone https://github.com/LucasQualityAssurance/qa-web-automation-framework.git
-cd qa-web-automation-framework/selenium-java   # ou selenium-java-cucumber
-mvn test                                       # com o navegador visível
-mvn test -Dheadless=true                       # sem abrir janela
+cd qa-web-automation-framework
+mvn test                                         # roda os dois projetos
+mvn test -pl selenium-java -am                   # só o projeto JUnit 5
+mvn test -pl selenium-java-cucumber -am          # só o projeto Cucumber
+mvn test -Dheadless=true                         # sem abrir janela
 ```
 
+Os comandos rodam na **raiz** do repositório: `-pl` escolhe o módulo e `-am` compila junto o `core`.
 No `selenium-java-cucumber`, dá para rodar só uma funcionalidade pela tag:
 
 ```bash
-mvn test "-Dcucumber.filter.tags=@alertas"
+mvn test -pl selenium-java-cucumber -am "-Dcucumber.filter.tags=@alertas"
 ```
 
 O passo a passo completo (instalação no Windows, macOS e Linux, IntelliJ e solução de problemas)

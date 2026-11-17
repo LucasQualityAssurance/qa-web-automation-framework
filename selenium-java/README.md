@@ -1,6 +1,6 @@
 # selenium-java
 
-[![selenium-java](https://github.com/LucasQualityAssurance/qa-web-automation-framework/actions/workflows/selenium-java.yml/badge.svg)](https://github.com/LucasQualityAssurance/qa-web-automation-framework/actions/workflows/selenium-java.yml)
+[![selenium-java](https://github.com/LucasQualityAssurance/qa-web-automation-framework/actions/workflows/ci.yml/badge.svg)](https://github.com/LucasQualityAssurance/qa-web-automation-framework/actions/workflows/ci.yml)
 
 > Parte do repositório [qa-web-automation-framework](../README.md). Para a versão BDD, veja [`selenium-java-cucumber`](../selenium-java-cucumber).
 
@@ -56,26 +56,26 @@ validações comparam os textos originais do site, que estão em inglês.
 
 ## Estrutura do projeto
 
-O projeto Maven fica na pasta `selenium-java/`, dentro do repositório:
+Este projeto é o módulo `selenium-java/` do repositório. Os page objects, a `DriverFactory`, os utilitários
+e a massa de dados ficam no módulo `core/`, compartilhado com o outro projeto:
 
 ```
 qa-web-automation-framework/
-├── README.md
-├── LICENSE
+├── pom.xml                                 # POM pai: módulos, versões e plugins compartilhados
 ├── Files/                                  # Arquivos baixados pelos testes (criada na execução, ignorada pelo Git)
+├── core/                                   # Código compartilhado com o selenium-java-cucumber
+│   └── src/main/java
+│       ├── dados/                          # Massa de teste (credenciais e gerador de dados aleatórios)
+│       ├── factory/DriverFactory.java      # Cria o Chrome (pasta de downloads, modo headless)
+│       ├── pages/                          # Page objects: BasePage + uma classe por página
+│       └── utils/                          # ConfigReader, TestLogger, ArquivoUtils, AllureAmbiente
 └── selenium-java/
-    ├── pom.xml                             # Dependências e plugins (Surefire e Allure)
-    └── src
-        ├── main/java
-        │   ├── factory/DriverFactory.java  # Cria o Chrome (pasta de downloads, modo headless)
-        │   ├── pages/                      # Page objects: BasePage + uma classe por página
-        │   └── utils/                      # ConfigReader, TestLogger, ArquivoUtils, AllureAmbiente
-        └── test
-            ├── java
-            │   ├── base/BaseTest.java      # Abre e fecha o navegador em cada teste
-            │   ├── dados/                  # Massa de teste (credenciais e gerador de dados aleatórios)
-            │   └── tests/                  # Classes de teste
-            └── resources/allure.properties # Pasta onde o Allure grava os resultados
+    ├── pom.xml                             # Depende do core; JUnit 5 e Allure
+    └── src/test
+        ├── java
+        │   ├── base/BaseTest.java          # Abre e fecha o navegador em cada teste
+        │   └── tests/                      # Classes de teste
+        └── resources/allure.properties     # Pasta onde o Allure grava os resultados
 ```
 
 Como as peças se encaixam:
@@ -159,16 +159,17 @@ git --version
 
 ```bash
 git clone https://github.com/LucasQualityAssurance/qa-web-automation-framework.git
-cd qa-web-automation-framework/selenium-java
+cd qa-web-automation-framework
 ```
 
-> Todos os comandos `mvn` devem ser executados dentro da pasta `selenium-java`, que é onde fica o
-> `pom.xml`. Rodando de outra pasta, o Maven mostra o erro "there is no POM in this directory".
+> O repositório é um projeto Maven **multi-módulo**: os page objects e utilitários ficam no módulo
+> [`core`](../core), compartilhado com o outro projeto. Rode os comandos `mvn` na **raiz do
+> repositório**: `-pl selenium-java` escolhe este módulo e `-am` compila junto o `core`, do qual ele depende.
 
 ### 2. Rodar todos os testes
 
 ```bash
-mvn test
+mvn test -pl selenium-java -am
 ```
 
 Na primeira vez o Maven baixa as dependências, o que pode levar alguns minutos. O Chrome abre na
@@ -189,7 +190,7 @@ Durante a execução, cada passo aparece no terminal:
 ### 3. Rodar sem abrir o navegador (modo headless)
 
 ```bash
-mvn test -Dheadless=true
+mvn test -pl selenium-java -am -Dheadless=true
 ```
 
 O Chrome roda em segundo plano, sem janela e sem a pausa entre os passos. É o modo mais rápido e o
@@ -199,19 +200,19 @@ indicado para servidores de integração contínua (CI).
 
 ```bash
 # Uma classe
-mvn test -Dtest=LoginTest
+mvn test -pl selenium-java -am -Dtest=LoginTest
 
 # Mais de uma classe
-mvn test -Dtest=LoginTest,MultiplasJanelasTest
+mvn test -pl selenium-java -am -Dtest=LoginTest,MultiplasJanelasTest
 
 # Um único método de uma classe
-mvn test -Dtest=AlertasJavaScriptTest#deveAceitarAlertaSimples
+mvn test -pl selenium-java -am -Dtest=AlertasJavaScriptTest#deveAceitarAlertaSimples
 ```
 
 ## Opções de execução
 
 Todas as opções são passadas com `-D` e podem ser combinadas
-(ex.: `mvn test -Dtest=LoginTest -DpausaEntrePassos=0`).
+(ex.: `mvn test -pl selenium-java -am -Dtest=LoginTest -DpausaEntrePassos=0`).
 
 | Opção | Padrão | O que faz |
 |---|---|---|
@@ -240,7 +241,7 @@ senha, data de nascimento, país, idiomas, interesses, cor...), gerados pela cla
 Se o teste falhar com algum dado, repita a execução com exatamente os mesmos valores:
 
 ```bash
-mvn test -Dtest=CadastroFormularioTest -Dseed=235579287892700
+mvn test -pl selenium-java -am -Dtest=CadastroFormularioTest -Dseed=235579287892700
 ```
 
 A data de nascimento é calculada a partir do dia atual, então ela só se repete igual no mesmo dia.
@@ -252,7 +253,7 @@ de download e é ignorada pelo Git.
 
 ## Rodando pelo IntelliJ IDEA
 
-1. **File → Open** e selecione a pasta `selenium-java` (a que contém o `pom.xml`). Se o IntelliJ
+1. **File → Open** e selecione a pasta raiz `qa-web-automation-framework` (a que contém o `pom.xml` principal). Se o IntelliJ
    perguntar, escolha abrir como projeto Maven e clique em **Trust Project**.
 2. Aguarde o IntelliJ baixar as dependências (barra de progresso no rodapé).
 3. Confira o JDK em **File → Project Structure → Project → SDK**: deve ser um JDK 21. Se não houver,
@@ -271,8 +272,8 @@ Se arquivos novos não aparecerem na árvore do projeto, use **File → Reload A
 Os testes gravam os resultados em `selenium-java/target/allure-results`. Para ver o relatório:
 
 ```bash
-mvn clean test       # roda os testes e grava os resultados
-mvn allure:serve     # gera o relatório e abre no navegador
+mvn clean test -pl selenium-java -am       # roda os testes e grava os resultados
+mvn allure:serve -pl selenium-java     # gera o relatório e abre no navegador
 ```
 
 Não é preciso instalar o Allure: o plugin do Maven baixa a ferramenta na primeira vez. Para parar o
@@ -284,20 +285,17 @@ O relatório mostra:
 - os testes agrupados por classe de teste, na aba **Suites**;
 - o ambiente da execução (URL, navegador, modo headless, versão do Java e sistema operacional).
 
-> Use `mvn clean test` antes de gerar o relatório: sem o `clean`, os resultados das execuções
+> Use `mvn clean test -pl selenium-java -am` antes de gerar o relatório: sem o `clean`, os resultados das execuções
 > anteriores continuam na pasta e aparecem misturados no relatório.
 
 ## Integração contínua (GitHub Actions)
 
 Os testes rodam automaticamente no GitHub Actions pelo workflow
-[`.github/workflows/selenium-java.yml`](../.github/workflows/selenium-java.yml). O selo no topo deste
-README mostra o resultado da última execução.
+[`.github/workflows/ci.yml`](../.github/workflows/ci.yml), que roda os dois projetos em
+paralelo (um job para cada). O selo no topo deste README mostra o resultado da última execução.
 
-**Quando roda:**
-
-- a cada push na `main` que altere a pasta `selenium-java/` ou o próprio workflow;
-- a cada pull request para a `main` com essas mesmas alterações;
-- manualmente, na aba **Actions → selenium-java → Run workflow**.
+**Quando roda:** a cada push ou pull request na `main` e manualmente, na aba
+**Actions → CI → Run workflow**.
 
 **O que faz:**
 
@@ -305,24 +303,15 @@ README mostra o resultado da última execução.
 |---|---|
 | Baixar o código | `actions/checkout` |
 | Instalar o JDK 21 | `actions/setup-java` (Temurin), com cache das dependências do Maven |
-| Rodar os testes | `mvn -B clean test -Dheadless=true` (Chrome sem janela, em Ubuntu) |
-| Gerar o relatório Allure | `mvn -B allure:report`, executado mesmo quando algum teste falha |
-| Publicar o relatório | Artefato `allure-report`, disponível por 14 dias |
+| Rodar os testes | `mvn -B clean test -pl selenium-java -am -Dheadless=true` (Chrome sem janela, em Ubuntu) |
+| Gerar o relatório Allure | `mvn -B allure:report -pl selenium-java`, executado mesmo quando algum teste falha |
+| Publicar os relatórios | Artefato `allure-report-selenium-java`, disponível por 14 dias |
+| Publicar no GitHub Pages | Só na `main`: os relatórios ficam online, sem precisar baixar nada |
 
-**Como ver o relatório de uma execução:**
-
-1. Abra a aba **Actions** do repositório e clique na execução desejada.
-2. No fim da página, em **Artifacts**, baixe o `allure-report` e extraia o `.zip`.
-3. Abra o relatório com um servidor local, dentro da pasta extraída:
-   ```bash
-   npx http-server
-   ```
-   Depois acesse o endereço mostrado no terminal (ex.: http://127.0.0.1:8080). Abrir o
-   `index.html` direto no navegador não funciona, porque o navegador bloqueia o carregamento dos
-   dados do relatório a partir de arquivos locais.
-
-No CI o Chrome já vem instalado na máquina do GitHub, e o Selenium Manager baixa o ChromeDriver
-compatível, então nenhuma configuração extra é necessária.
+**Como ver o relatório:** abra o **[relatório online no GitHub Pages](https://lucasqualityassurance.github.io/qa-web-automation-framework/)**,
+que mostra sempre a última execução na `main`. Para uma execução específica (de um pull request,
+por exemplo), abra a execução na aba **Actions** e baixe o artefato em **Artifacts**. O relatório
+Allure precisa de um servidor local dentro da pasta extraída (`npx http-server`).
 
 ## Boas práticas adotadas
 
@@ -340,14 +329,14 @@ compatível, então nenhuma configuração extra é necessária.
 
 ## Como criar um novo teste
 
-1. **Crie o page object** em `src/main/java/pages`, herdando de `BasePage`: declare os localizadores
+1. **Crie o page object** em `core/src/main/java/pages`, herdando de `BasePage`: declare os localizadores
    (`By`) e os métodos das ações da página, usando `clicar`, `escrever`, `obterTexto`...
 2. **Adicione o link na `HomePage`** (ex.: `acessarMinhaPagina()`), localizado pelo `href`.
 3. **Crie a classe de teste** em `src/test/java/tests`, herdando de `BaseTest`, com
    `@Test` e `@DisplayName`.
 4. **Registre os passos** com `TestLogger.step("...")` antes de cada ação. Para mensagens que não
    envolvem ação na tela, use `TestLogger.info("...")`, que não faz pausa.
-5. Rode com `mvn test -Dtest=NomeDaClasseTest`.
+5. Rode com `mvn test -pl selenium-java -am -Dtest=NomeDaClasseTest`.
 
 ## Solução de problemas
 
@@ -355,7 +344,7 @@ compatível, então nenhuma configuração extra é necessária.
 |---|---|---|
 | `mvn: command not found` / `'mvn' não é reconhecido` | Maven não instalado ou fora do `PATH` | Instale o Maven e adicione a pasta `bin` ao `PATH`, ou rode pelo IntelliJ |
 | `No compiler is provided in this environment. Perhaps you are running on a JRE rather than a JDK?` | O `JAVA_HOME` aponta para um JRE | Instale o JDK 21 e aponte o `JAVA_HOME` para ele. Confira com `javac -version` |
-| `there is no POM in this directory` | Comando executado fora da pasta do projeto | Entre na pasta `selenium-java` antes de rodar o `mvn` |
+| `there is no POM in this directory` | Comando executado fora da pasta do projeto | Rode o `mvn` na raiz do repositório (a pasta `qa-web-automation-framework`) |
 | `release version 21 not supported` | Maven rodando com Java mais antigo | Confira com `mvn -version` se o Java é o 21 e ajuste o `JAVA_HOME` |
 | Aviso `Unable to find CDP implementation matching ...` | O Chrome é mais novo que o suporte a DevTools do Selenium | É só um aviso e não afeta os testes |
 | Erro ao iniciar o Chrome / `SessionNotCreatedException` | Chrome não instalado, ou sem internet para baixar o driver | Instale ou atualize o Google Chrome e confira a conexão na primeira execução |
