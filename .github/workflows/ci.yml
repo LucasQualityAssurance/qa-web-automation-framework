@@ -40,23 +40,25 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
+          cache-dependency-path: '${{ matrix.modulo }}/pom.xml'
 
-      # -pl escolhe o módulo e -am compila também o core, do qual ele depende
       - name: Rodar os testes
+        working-directory: ${{ matrix.modulo }}
         env:
           MODULO: ${{ matrix.modulo }}
           TAGS: ${{ github.event.inputs.tags }}
         run: |
           if [ "$MODULO" = "selenium-java-cucumber" ] && [ -n "$TAGS" ]; then
             echo "Rodando só os cenários com as tags: $TAGS"
-            mvn -B clean test -pl "$MODULO" -am -Dheadless=true "-Dcucumber.filter.tags=$TAGS"
+            mvn -B clean test -Dheadless=true "-Dcucumber.filter.tags=$TAGS"
           else
-            mvn -B clean test -pl "$MODULO" -am -Dheadless=true
+            mvn -B clean test -Dheadless=true
           fi
 
       - name: Gerar o relatório Allure
         if: always()
-        run: mvn -B allure:report -pl ${{ matrix.modulo }}
+        working-directory: ${{ matrix.modulo }}
+        run: mvn -B allure:report
 
       - name: Publicar o relatório Allure
         if: always()
