@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Relatórios de Testes</title>
+<style>
+  :root { --bg:#f6f7f9; --card:#fff; --fg:#1d2330; --muted:#5d6675; --accent:#2f6fde; --line:#e2e5ea; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#12151b; --card:#1b2029; --fg:#e7eaf0; --muted:#9aa3b2; --accent:#6c9cff; --line:#2a313d; } }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--fg); }
+  main { max-width:760px; margin:0 auto; padding:48px 16px; }
+  h1 { margin:0 0 8px; font-size:1.8rem; }
+  p.sub { margin:0 0 32px; color:var(--muted); }
+  .grid { display:grid; gap:16px; }
+  a.card { display:block; padding:20px; background:var(--card); border:1px solid var(--line); border-radius:12px; color:inherit; text-decoration:none; transition:border-color .15s; }
+  a.card:hover { border-color:var(--accent); }
+  a.card strong { display:block; font-size:1.1rem; margin-bottom:4px; color:var(--accent); }
+  a.card span { color:var(--muted); font-size:.95rem; }
+  footer { margin-top:32px; color:var(--muted); font-size:.85rem; }
+  footer a { color:var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Relatórios de Testes</h1>
+  <p class="sub">Automação Web com Java + Selenium. Resultado da última execução na branch <code>main</code>.</p>
+  <div class="grid">
+    <a class="card" href="selenium-java/"><strong>Allure: selenium-java</strong><span>Testes em JUnit 5 + Page Object Model</span></a>
+    <a class="card" href="selenium-java-cucumber/"><strong>Allure: selenium-java-cucumber</strong><span>Cenários BDD em Gherkin (português) com Cucumber</span></a>
+    <a class="card" href="cucumber.html"><strong>Relatório HTML do Cucumber</strong><span>Relatório nativo do Cucumber, em um único arquivo</span></a>
+  </div>
+  <footer>Atualizado em {{DATA}} · <a href="https://github.com/{{REPO}}/actions/runs/{{RUN}}">execução no GitHub Actions</a> · <a href="https://github.com/{{REPO}}">código-fonte</a></footer>
+</main>
+</body>
+</html>

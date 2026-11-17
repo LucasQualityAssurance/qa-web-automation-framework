@@ -1,6 +1,6 @@
 # selenium-java-cucumber
 
-[![selenium-java-cucumber](https://github.com/LucasQualityAssurance/qa-web-automation-framework/actions/workflows/selenium-java-cucumber.yml/badge.svg)](https://github.com/LucasQualityAssurance/qa-web-automation-framework/actions/workflows/selenium-java-cucumber.yml)
+[![selenium-java-cucumber](https://github.com/LucasQualityAssurance/qa-web-automation-framework/actions/workflows/testes.yml/badge.svg)](https://github.com/LucasQualityAssurance/qa-web-automation-framework/actions/workflows/testes.yml)
 
 > Parte do repositório [qa-web-automation-framework](../README.md). Para a versão com testes 100% em
 > Java (JUnit 5), veja [`selenium-java`](../selenium-java).
@@ -89,30 +89,32 @@ validações comparam os textos originais do site, que estão em inglês.
 
 ## Estrutura do projeto
 
-O projeto Maven fica na pasta `selenium-java-cucumber/`, dentro do repositório:
+Este projeto é o módulo `selenium-java-cucumber/` do repositório. Os page objects, a `DriverFactory`, os utilitários
+e a massa de dados ficam no módulo `core/`, compartilhado com o outro projeto:
 
 ```
 qa-web-automation-framework/
+├── pom.xml                                     # POM pai: módulos, versões e plugins compartilhados
 ├── Files/                                      # Arquivos baixados pelos testes (criada na execução, ignorada pelo Git)
+├── core/                                       # Código compartilhado com o selenium-java
+│   └── src/main/java
+│       ├── dados/                              # Massa de teste (credenciais e gerador de dados aleatórios)
+│       ├── factory/DriverFactory.java          # Cria o Chrome (pasta de downloads, modo headless)
+│       ├── pages/                              # Page objects: BasePage + uma classe por página
+│       └── utils/                              # ConfigReader, TestLogger, ArquivoUtils, AllureAmbiente
 └── selenium-java-cucumber/
-    ├── pom.xml                                 # Dependências e plugins (Surefire e Allure)
-    └── src
-        ├── main/java
-        │   ├── factory/DriverFactory.java      # Cria o Chrome (pasta de downloads, modo headless)
-        │   ├── pages/                          # Page objects: BasePage + uma classe por página
-        │   └── utils/                          # ConfigReader, TestLogger, ArquivoUtils, AllureAmbiente
-        └── test
-            ├── java
-            │   ├── dados/                      # Massa de teste (credenciais e gerador de dados aleatórios)
-            │   ├── hooks/
-            │   │   ├── Hooks.java              # Abre e fecha o navegador em cada cenário, evidência da falha
-            │   │   └── PausaEntrePassosPlugin.java  # Pausa de visualização depois de cada passo
-            │   ├── runner/
-            │   │   └── TodosOsCenariosCucumberTest.java  # Runner: liga as features, os steps e os plugins
-            │   └── steps/                      # Step definitions: uma classe por feature + NavegacaoSteps
-            └── resources
-                ├── features/                   # Cenários em Gherkin (.feature)
-                └── allure.properties           # Pasta onde o Allure grava os resultados
+    ├── pom.xml                                 # Depende do core; Cucumber, JUnit Platform e Allure
+    └── src/test
+        ├── java
+        │   ├── hooks/
+        │   │   ├── Hooks.java                  # Abre e fecha o navegador em cada cenário, evidência da falha
+        │   │   └── PausaEntrePassosPlugin.java # Pausa de visualização depois de cada passo
+        │   ├── runner/
+        │   │   └── TodosOsCenariosCucumberTest.java  # Runner: liga as features, os steps e os plugins
+        │   └── steps/                          # Step definitions: uma classe por feature + NavegacaoSteps
+        └── resources
+            ├── features/                       # Cenários em Gherkin (.feature)
+            └── allure.properties               # Pasta onde o Allure grava os resultados
 ```
 
 Como as peças se encaixam:
@@ -159,16 +161,17 @@ O passo a passo de instalação do JDK e do Maven no Windows, macOS e Linux est�
 
 ```bash
 git clone https://github.com/LucasQualityAssurance/qa-web-automation-framework.git
-cd qa-web-automation-framework/selenium-java-cucumber
+cd qa-web-automation-framework
 ```
 
-> Todos os comandos `mvn` devem ser executados dentro da pasta `selenium-java-cucumber`, que é onde
-> fica o `pom.xml`. Rodando de outra pasta, o Maven mostra o erro "there is no POM in this directory".
+> O repositório é um projeto Maven **multi-módulo**: os page objects e utilitários ficam no módulo
+> [`core`](../core), compartilhado com o outro projeto. Rode os comandos `mvn` na **raiz do
+> repositório**: `-pl selenium-java-cucumber` escolhe este módulo e `-am` compila junto o `core`, do qual ele depende.
 
 ### 2. Rodar todos os cenários
 
 ```bash
-mvn test
+mvn test -pl selenium-java-cucumber -am
 ```
 
 Na primeira vez o Maven baixa as dependências, o que pode levar alguns minutos. O Chrome abre na
@@ -192,7 +195,7 @@ Cenário: Abrir uma nova janela e voltar para a original                # featur
 ### 3. Rodar sem abrir o navegador (modo headless)
 
 ```bash
-mvn test -Dheadless=true
+mvn test -pl selenium-java-cucumber -am -Dheadless=true
 ```
 
 O Chrome roda em segundo plano, sem janela e sem a pausa entre os passos. É o modo mais rápido e o
@@ -209,10 +212,10 @@ Há três formas de escolher os cenários. Elas podem ser combinadas com `-Dhead
 ### Por tag (o mais prático)
 
 ```bash
-mvn test "-Dcucumber.filter.tags=@janelas"
-mvn test "-Dcucumber.filter.tags=@login and @negativo"
-mvn test "-Dcucumber.filter.tags=@alertas and not @prompt"
-mvn test "-Dcucumber.filter.tags=@formulario or @arquivos"
+mvn test -pl selenium-java-cucumber -am "-Dcucumber.filter.tags=@janelas"
+mvn test -pl selenium-java-cucumber -am "-Dcucumber.filter.tags=@login and @negativo"
+mvn test -pl selenium-java-cucumber -am "-Dcucumber.filter.tags=@alertas and not @prompt"
+mvn test -pl selenium-java-cucumber -am "-Dcucumber.filter.tags=@formulario or @arquivos"
 ```
 
 As tags disponíveis estão na tabela de [cenários de teste](#cenários-de-teste).
@@ -220,7 +223,7 @@ As tags disponíveis estão na tabela de [cenários de teste](#cenários-de-test
 ### Pelo arquivo e pela linha do cenário
 
 ```bash
-mvn test "-Dcucumber.features=classpath:features/alertas_javascript.feature:13"
+mvn test -pl selenium-java-cucumber -am "-Dcucumber.features=classpath:features/alertas_javascript.feature:13"
 ```
 
 O número depois dos dois pontos é a linha do `Cenário:` no arquivo. Sem `:linha`, roda a feature inteira.
@@ -228,7 +231,7 @@ O número depois dos dois pontos é a linha do `Cenário:` no arquivo. Sem `:lin
 ### Pelo nome do cenário
 
 ```bash
-mvn test "-Dcucumber.filter.name=.*Cancelar o prompt.*"
+mvn test -pl selenium-java-cucumber -am "-Dcucumber.filter.name=.*Cancelar o prompt.*"
 ```
 
 O valor é uma expressão regular que precisa casar com o **nome inteiro** do cenário, por isso os
@@ -240,7 +243,7 @@ do Maven. Isso é esperado: só os cenários escolhidos são executados.
 ## Opções de execução
 
 Todas as opções são passadas com `-D` e podem ser combinadas
-(ex.: `mvn test "-Dcucumber.filter.tags=@login" -DpausaEntrePassos=0`).
+(ex.: `mvn test -pl selenium-java-cucumber -am "-Dcucumber.filter.tags=@login" -DpausaEntrePassos=0`).
 
 | Opção | Padrão | O que faz |
 |---|---|---|
@@ -272,7 +275,7 @@ relatório:
 Se o cenário falhar com algum dado, repita a execução com exatamente os mesmos valores:
 
 ```bash
-mvn test "-Dcucumber.filter.tags=@formulario" "-Dseed=50885498744400"
+mvn test -pl selenium-java-cucumber -am "-Dcucumber.filter.tags=@formulario" "-Dseed=50885498744400"
 ```
 
 A data de nascimento é calculada a partir do dia atual, então ela só se repete igual no mesmo dia.
@@ -284,7 +287,7 @@ cenário com a tag `@arquivos` (por um hook `@Before("@arquivos")`) e é ignorad
 
 ## Rodando pelo IntelliJ IDEA
 
-1. **File → Open** e selecione a pasta `selenium-java-cucumber` (a que contém o `pom.xml`). Se o
+1. **File → Open** e selecione a pasta raiz `qa-web-automation-framework` (a que contém o `pom.xml` principal). Se o
    IntelliJ perguntar, escolha abrir como projeto Maven e clique em **Trust Project**.
 2. Instale os plugins **Gherkin** e **Cucumber for Java** em **Settings → Plugins**. Eles colorem os
    arquivos `.feature`, ligam cada passo ao método Java (`Ctrl+clique` no passo) e mostram os passos
@@ -310,13 +313,13 @@ Para usar as opções de execução no IntelliJ, abra **Run → Edit Configurati
 Os cenários gravam os resultados em `selenium-java-cucumber/target/allure-results`. Para ver o relatório:
 
 ```bash
-mvn clean test       # roda os cenários e grava os resultados
-mvn allure:serve     # gera o relatório e abre no navegador
+mvn clean test -pl selenium-java-cucumber -am       # roda os cenários e grava os resultados
+mvn allure:serve -pl selenium-java-cucumber     # gera o relatório e abre no navegador
 ```
 
 Não é preciso instalar o Allure: o plugin do Maven baixa a ferramenta na primeira vez. Para parar o
 servidor do relatório, use `Ctrl+C` no terminal. Para só gerar os arquivos, sem abrir, use
-`mvn allure:report` (o relatório fica em `target/site/allure-maven-plugin`).
+`mvn allure:report -pl selenium-java-cucumber` (o relatório fica em `target/site/allure-maven-plugin`).
 
 O relatório mostra:
 
@@ -329,7 +332,7 @@ O relatório mostra:
   screenshot da página depois que ele foi fechado;
 - o ambiente da execução (URL, navegador, modo headless, versão do Java e sistema operacional).
 
-> Use `mvn clean test` antes de gerar o relatório: sem o `clean`, os resultados das execuções
+> Use `mvn clean test -pl selenium-java-cucumber -am` antes de gerar o relatório: sem o `clean`, os resultados das execuções
 > anteriores continuam na pasta e aparecem misturados no relatório.
 
 ### Relatório HTML do Cucumber
@@ -339,16 +342,12 @@ aberto direto no navegador: `target/cucumber-reports/cucumber.html`.
 
 ## Integração contínua (GitHub Actions)
 
-Os cenários rodam automaticamente no GitHub Actions pelo workflow
-[`.github/workflows/selenium-java-cucumber.yml`](../.github/workflows/selenium-java-cucumber.yml). O
-selo no topo deste README mostra o resultado da última execução.
+Os testes rodam automaticamente no GitHub Actions pelo workflow
+[`.github/workflows/testes.yml`](../.github/workflows/testes.yml), que roda os dois projetos em
+paralelo (um job para cada). O selo no topo deste README mostra o resultado da última execução.
 
-**Quando roda:**
-
-- a cada push na `main` que altere a pasta `selenium-java-cucumber/` ou o próprio workflow;
-- a cada pull request para a `main` com essas mesmas alterações;
-- manualmente, na aba **Actions → selenium-java-cucumber → Run workflow**. No campo **tags** dá para
-  informar uma expressão de tags (ex.: `@login and @negativo`); vazio roda todos os cenários.
+**Quando roda:** a cada push ou pull request na `main` e manualmente, na aba
+**Actions → testes → Run workflow**. No campo **tags** dá para informar uma expressão de tags (ex.: `@login and @negativo`); vazio roda todos os cenários.
 
 **O que faz:**
 
@@ -356,27 +355,15 @@ selo no topo deste README mostra o resultado da última execução.
 |---|---|
 | Baixar o código | `actions/checkout` |
 | Instalar o JDK 21 | `actions/setup-java` (Temurin), com cache das dependências do Maven |
-| Rodar os cenários | `mvn -B clean test -Dheadless=true` (Chrome sem janela, em Ubuntu), com o filtro de tags quando informado |
-| Gerar o relatório Allure | `mvn -B allure:report`, executado mesmo quando algum cenário falha |
-| Publicar os relatórios | Artefatos `allure-report-cucumber` e `cucumber-html-report`, disponíveis por 14 dias |
+| Rodar os testes | `mvn -B clean test -pl selenium-java-cucumber -am -Dheadless=true` (Chrome sem janela, em Ubuntu), com o filtro de tags quando informado |
+| Gerar o relatório Allure | `mvn -B allure:report -pl selenium-java-cucumber`, executado mesmo quando algum teste falha |
+| Publicar os relatórios | Artefatos `allure-report-selenium-java-cucumber` e `cucumber-html-report`, disponíveis por 14 dias |
+| Publicar no GitHub Pages | Só na `main`: os relatórios ficam online, sem precisar baixar nada |
 
-O workflow só tem permissão de leitura no repositório, para no máximo 30 minutos, e uma execução nova
-no mesmo branch cancela a anterior que ainda estiver rodando.
-
-**Como ver os relatórios de uma execução:**
-
-1. Abra a aba **Actions** do repositório e clique na execução desejada.
-2. No fim da página, em **Artifacts**, baixe o artefato desejado e extraia o `.zip`.
-3. O `cucumber-html-report` é um arquivo único: abra o `cucumber.html` direto no navegador.
-4. O `allure-report-cucumber` precisa de um servidor local, dentro da pasta extraída:
-   ```bash
-   npx http-server
-   ```
-   Depois acesse o endereço mostrado no terminal (ex.: http://127.0.0.1:8080). Abrir o
-   `index.html` direto no navegador não funciona, porque o navegador bloqueia o carregamento dos
-   dados do relatório a partir de arquivos locais.
-
-Quando um cenário falha no CI, o screenshot da falha fica anexado ao cenário no relatório Allure.
+**Como ver o relatório:** abra o **[relatório online no GitHub Pages](https://lucasqualityassurance.github.io/qa-web-automation-framework/)**,
+que mostra sempre a última execução na `main`. Para uma execução específica (de um pull request,
+por exemplo), abra a execução na aba **Actions** e baixe o artefato em **Artifacts**. O relatório
+Allure precisa de um servidor local dentro da pasta extraída (`npx http-server`); o `cucumber.html` abre direto no navegador.
 
 ## Boas práticas adotadas
 
@@ -403,7 +390,7 @@ Quando um cenário falha no CI, o screenshot da falha fica anexado ao cenário n
    `Dado que estou na página inicial`) sempre que possível.
 2. **Rode só esse cenário** (por exemplo, pela tag). O Cucumber avisa quais passos ainda não têm step
    definition e mostra no terminal um esqueleto do método para cada um deles, pronto para copiar.
-3. **Crie o page object**, se a página ainda não tiver um, em `src/main/java/pages`, herdando de
+3. **Crie o page object**, se a página ainda não tiver um, em `core/src/main/java/pages`, herdando de
    `BasePage`. Se ela for acessada pela página inicial, adicione o link na `HomePage` e no
    `NavegacaoSteps`.
 4. **Crie a classe de steps** em `src/test/java/steps`, cole os métodos gerados e implemente cada um
@@ -418,7 +405,7 @@ Quando um cenário falha no CI, o screenshot da falha fica anexado ao cenário n
 |---|---|---|
 | `mvn: command not found` / `'mvn' não é reconhecido` | Maven não instalado ou fora do `PATH` | Instale o Maven e adicione a pasta `bin` ao `PATH`, ou rode pelo IntelliJ |
 | `No compiler is provided in this environment` | O `JAVA_HOME` aponta para um JRE | Instale o JDK 21 e aponte o `JAVA_HOME` para ele. Confira com `javac -version` |
-| `there is no POM in this directory` | Comando executado fora da pasta do projeto | Entre na pasta `selenium-java-cucumber` antes de rodar o `mvn` |
+| `there is no POM in this directory` | Comando executado fora da pasta do projeto | Rode o `mvn` na raiz do repositório (a pasta `qa-web-automation-framework`) |
 | Todos os cenários aparecem como `Skipped` | O filtro não encontrou nenhum cenário | Confira a tag; no filtro por nome, use `.*` no começo e no fim da expressão |
 | Opção `-D...` ignorada no PowerShell | O PowerShell quebrou o argumento no ponto | Coloque a opção inteira entre aspas: `"-Dcucumber.filter.tags=@login"` |
 | `Undefined step` / passo sem definição | O texto do passo na feature não bate com nenhuma step definition | Confira o texto (inclusive acentos e aspas) ou crie o método com o esqueleto mostrado no terminal |

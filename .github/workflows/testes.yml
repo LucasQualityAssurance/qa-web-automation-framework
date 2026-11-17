@@ -1,0 +1,128 @@
+name: testes
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'Expressão de tags do Cucumber (ex.: @login and @negativo). Vazio roda todos os cenários.'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+# Uma nova execução no mesmo branch cancela a anterior que ainda estiver rodando.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  testes:
+    name: ${{ matrix.modulo }} (Chrome headless)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        modulo: [selenium-java, selenium-java-cucumber]
+
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Instalar o JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      # -pl escolhe o módulo e -am compila também o core, do qual ele depende
+      - name: Rodar os testes
+        env:
+          MODULO: ${{ matrix.modulo }}
+          TAGS: ${{ github.event.inputs.tags }}
+        run: |
+          if [ "$MODULO" = "selenium-java-cucumber" ] && [ -n "$TAGS" ]; then
+            echo "Rodando só os cenários com as tags: $TAGS"
+            mvn -B clean test -pl "$MODULO" -am -Dheadless=true "-Dcucumber.filter.tags=$TAGS"
+          else
+            mvn -B clean test -pl "$MODULO" -am -Dheadless=true
+          fi
+
+      - name: Gerar o relatório Allure
+        if: always()
+        run: mvn -B allure:report -pl ${{ matrix.modulo }}
+
+      - name: Publicar o relatório Allure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report-${{ matrix.modulo }}
+          path: ${{ matrix.modulo }}/target/site/allure-maven-plugin
+          retention-days: 14
+
+      - name: Publicar o relatório HTML do Cucumber
+        if: always() && matrix.modulo == 'selenium-java-cucumber'
+        uses: actions/upload-artifact@v4
+        with:
+          name: cucumber-html-report
+          path: selenium-java-cucumber/target/cucumber-reports/cucumber.html
+          retention-days: 14
+
+  # Publica os relatórios no GitHub Pages: só na main, mesmo quando algum teste falha.
+  pages:
+    name: Publicar relatórios no GitHub Pages
+    needs: testes
+    if: always() && github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Baixar os relatórios
+        uses: actions/download-artifact@v4
+        with:
+          path: relatorios
+
+      - name: Montar o site
+        env:
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          mkdir -p site
+          cp .github/pages/index.html site/
+          if [ -d relatorios/allure-report-selenium-java ]; then
+            cp -r relatorios/allure-report-selenium-java site/selenium-java
+          fi
+          if [ -d relatorios/allure-report-selenium-java-cucumber ]; then
+            cp -r relatorios/allure-report-selenium-java-cucumber site/selenium-java-cucumber
+          fi
+          if [ -f relatorios/cucumber-html-report/cucumber.html ]; then
+            cp relatorios/cucumber-html-report/cucumber.html site/cucumber.html
+          fi
+          DATA=$(TZ=America/Sao_Paulo date '+%d/%m/%Y %H:%M')
+          sed -i "s|{{DATA}}|$DATA|; s|{{RUN}}|$RUN_ID|; s|{{REPO}}|$REPO|g" site/index.html
+
+      - name: Configurar o GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Enviar o site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Publicar
+        id: deploy
+        uses: actions/deploy-pages@v4

@@ -1,6 +1,6 @@
 package utils;
 
-import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 
@@ -26,9 +26,7 @@ public final class ConfigReader {
 
     /**
      * Diretório onde o Chrome está configurado para salvar automaticamente os arquivos baixados:
-     * a pasta {@code Files} na raiz do repositório. Ele é resolvido a partir do local das classes
-     * compiladas, então funciona em qualquer máquina e independe do diretório de trabalho de onde
-     * os testes são iniciados (IntelliJ ou Maven).
+     * a pasta {@code Files} na raiz do repositório.
      * <p>
      * Pode ser sobrescrito com {@code -DdiretorioDownload=<caminho>}.
      *
@@ -71,15 +69,17 @@ public final class ConfigReader {
     }
 
     /**
-     * Resolve a raiz do repositório a partir do local das classes compiladas
-     * ({@code <repo>/selenium-java/target/classes}).
+     * Resolve a raiz do repositório subindo a partir do diretório de trabalho até encontrar a
+     * pasta que contém o módulo {@code core}. Funciona tanto rodando o Maven na raiz quanto
+     * dentro da pasta de um módulo, e também pelo IntelliJ.
      */
     private static Path getRaizDoRepositorio() {
-        try {
-            Path pastaClasses = Path.of(ConfigReader.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-            return pastaClasses.getParent().getParent().getParent();
-        } catch (URISyntaxException e) {
-            throw new IllegalStateException("Nao foi possivel localizar a raiz do repositorio.", e);
+        Path atual = Path.of(System.getProperty("user.dir")).toAbsolutePath();
+        for (Path p = atual; p != null; p = p.getParent()) {
+            if (Files.isRegularFile(p.resolve("core").resolve("pom.xml"))) {
+                return p;
+            }
         }
+        return atual;
     }
 }
